@@ -50,9 +50,10 @@ class PriorityQueue(abc.MutableSet):
 
         :param values: initial values
         :param key: function of one argument to calculate priority.
-        :param reverse: flag, if set to `True` specifies
-        that values should be processed in descending order
-        (from highest priority to lowest).
+        :param reverse:
+            flag, if set to `True` specifies
+            that values should be processed in descending order
+            (from highest priority to lowest).
 
         >>> values = range(-5, 6)
         >>> queue = PriorityQueue(*values, key=abs, reverse=True)
