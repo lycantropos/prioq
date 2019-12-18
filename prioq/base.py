@@ -226,4 +226,9 @@ class PriorityQueue(abc.MutableSet):
             raise KeyError
 
     def clear(self) -> None:
+        """
+        Removes all values from the queue.
+
+        Complexity: O(1).
+        """
         self._items.clear()
