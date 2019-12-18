@@ -19,7 +19,7 @@ def test_basic(values_with_key: Tuple[List[Domain], Optional[Key]],
                            key=key,
                            reverse=reverse)
 
-    assert len(result.values) == len(values)
-    assert all(value in result.values for value in values)
+    assert len(result) == len(values)
+    assert all(value in result for value in values)
     assert result.key is key
     assert result.reverse is reverse
