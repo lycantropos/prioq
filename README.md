@@ -66,6 +66,26 @@ Install:
   pypy setup.py install
   ```
 
+Usage
+-----
+
+```python
+>>> from prioq.base import PriorityQueue
+>>> queue = PriorityQueue(*range(10))
+>>> list(queue)
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> queue.peek()
+0
+>>> queue.pop()
+0
+>>> list(queue)
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> queue.add(100)
+>>> list(queue)
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 100]
+
+```
+
 Development
 -----------
 
