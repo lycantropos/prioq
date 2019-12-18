@@ -13,7 +13,8 @@ from typing import (Iterator,
 from reprit.base import generate_repr
 
 from .hints import (Domain,
-                    Key, Range)
+                    Key,
+                    Range)
 from .utils import identity
 
 
