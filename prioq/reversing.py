@@ -29,10 +29,20 @@ class SimpleReverser(Reverser):
 
     @property
     def item(self) -> Domain:
+        """
+        >>> reverser = SimpleReverser(0)
+        >>> reverser.item
+        0
+        """
         return self._item
 
     @property
     def value(self) -> Domain:
+        """
+        >>> reverser = SimpleReverser(0)
+        >>> reverser.value
+        0
+        """
         return self._item
 
     def __lt__(self, other: 'SimpleReverser') -> bool:
