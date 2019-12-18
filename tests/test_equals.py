@@ -3,7 +3,7 @@ from hypothesis import given
 from prioq.base import PriorityQueue
 from tests.utils import (equivalence,
                          implication)
-from . import strategies
+from tests import strategies
 
 
 @given(strategies.priority_queues)

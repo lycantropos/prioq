@@ -4,7 +4,7 @@ from hypothesis import given
 
 from prioq.base import PriorityQueue
 from prioq.hints import Domain
-from . import strategies
+from tests import strategies
 
 
 @given(strategies.priority_queues_with_values)

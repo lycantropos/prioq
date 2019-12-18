@@ -1,7 +1,7 @@
 from hypothesis import given
 
 from prioq.base import PriorityQueue
-from . import strategies
+from tests import strategies
 
 
 @given(strategies.priority_queues)
