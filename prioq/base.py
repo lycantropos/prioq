@@ -42,7 +42,7 @@ class PriorityQueue(abc.MutableSet):
     __slots__ = ('_key', '_reverse', '_items',
                  '_item_to_value', '_value_to_item')
 
-    def __init__(self, *values: Domain,
+    def __init__(self, *_values: Domain,
                  key: Optional[Key] = None,
                  reverse: bool = False) -> None:
         """
@@ -64,13 +64,13 @@ class PriorityQueue(abc.MutableSet):
                                if reverse
                                else (identity if key is None
                                      else itemgetter(1)))
-        self._items = [self._value_to_item(value) for value in values]
+        self._items = [self._value_to_item(value) for value in _values]
         heapq.heapify(self._items)
 
     __repr__ = generate_repr(__init__)
 
     @property
-    def values(self) -> Sequence[Domain]:
+    def _values(self) -> Sequence[Domain]:
         return [self._item_to_value(item) for item in self._items]
 
     @property
@@ -87,7 +87,7 @@ class PriorityQueue(abc.MutableSet):
 
         Complexity: O(n).
         """
-        return value in self.values
+        return value in self._values
 
     def __eq__(self, other: 'PriorityQueue') -> bool:
         """
@@ -113,7 +113,7 @@ class PriorityQueue(abc.MutableSet):
 
         Complexity: O(n * log n).
         """
-        return iter(sorted(self.values,
+        return iter(sorted(self._values,
                            key=self._key,
                            reverse=self._reverse))
 

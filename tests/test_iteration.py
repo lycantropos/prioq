@@ -23,6 +23,6 @@ def test_elements(priority_queue: PriorityQueue) -> None:
 def test_order(priority_queue: PriorityQueue) -> None:
     result = iter(priority_queue)
 
-    assert list(result) == sorted(priority_queue.values,
+    assert list(result) == sorted(priority_queue._values,
                                   key=priority_queue.key,
                                   reverse=priority_queue.reverse)
