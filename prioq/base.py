@@ -85,7 +85,11 @@ class ComplexReverser(Reverser):
 def reverse_key(key: Optional[Key]) -> Key:
     return (SimpleReverser
             if key is None
-            else lambda value: ComplexReverser(_to_item(key, value)))
+            else partial(_to_complex_reverser, key))
+
+
+def _to_complex_reverser(key: Key, value: Domain) -> ComplexReverser:
+    return ComplexReverser(_to_item(key, value))
 
 
 def _to_item(key: Key, value: Domain) -> Tuple[Range, Domain]:
