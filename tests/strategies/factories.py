@@ -1,3 +1,4 @@
+from functools import partial
 from operator import itemgetter
 from typing import (List,
                     Optional,
@@ -20,15 +21,8 @@ def to_values_tuples_with_keys(
     def to_values_tuples_with_key(
             values_with_keys_list: List[Strategy[Tuple[Domain, Key]]]
     ) -> Tuple[Strategy[Tuple[Domain, ...]], Strategy[Key]]:
-        def combine_keys(keys: Tuple[Key, ...]) -> Key:
-            def combined(values: Sequence[Domain]) -> Range:
-                return tuple(key(arg) for key, arg in zip(keys, values))
-
-            name = ('combination_of_' + '_'.join(key.__qualname__
-                                                 for key in keys)
-                    if keys else 'empty_combination')
-            combined.__name__ = combined.__qualname__ = name
-            return combined
+        def combine_keys(keys: Sequence[Key]) -> Key:
+            return partial(combined, keys)
 
         return (strategies.tuples(*map(itemgetter(0), values_with_keys_list)),
                 strategies.tuples(*map(itemgetter(1), values_with_keys_list))
@@ -37,6 +31,10 @@ def to_values_tuples_with_keys(
     return (strategies.lists(values_with_keys,
                              max_size=100)
             .map(to_values_tuples_with_key))
+
+
+def combined(keys: Sequence[Key], values: Sequence[Domain]) -> Range:
+    return tuple(key(arg) for key, arg in zip(keys, values))
 
 
 def to_values_with_keys(values_with_keys: Tuple[Strategy[Domain],

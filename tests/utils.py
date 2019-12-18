@@ -1,7 +1,10 @@
+import pickle
 from typing import (Any,
                     Iterable)
 
 from hypothesis.strategies import SearchStrategy
+
+from prioq.hints import Domain
 
 Strategy = SearchStrategy
 
@@ -16,3 +19,7 @@ def implication(antecedent: bool, consequent: bool) -> bool:
 
 def capacity(iterable: Iterable[Any]) -> int:
     return sum(1 for _ in iterable)
+
+
+def pickle_round_trip(object_: Domain) -> Domain:
+    return pickle.loads(pickle.dumps(object_))
