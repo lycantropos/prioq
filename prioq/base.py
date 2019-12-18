@@ -53,6 +53,15 @@ class PriorityQueue(abc.MutableSet):
         :param reverse: flag, if set to `True` specifies
         that values should be processed in descending order
         (from highest priority to lowest).
+
+        >>> values = range(-5, 6)
+        >>> queue = PriorityQueue(*values, key=abs, reverse=True)
+        >>> all(value in queue for value in values)
+        True
+        >>> queue.key is abs
+        True
+        >>> queue.reverse
+        True
         """
         self._key = key
         self._reverse = reverse
@@ -86,6 +95,12 @@ class PriorityQueue(abc.MutableSet):
         Checks if value is present in the queue.
 
         Complexity: O(n).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> 0 in queue
+        True
+        >>> -1 in queue
+        False
         """
         return value in self._values
 
@@ -94,6 +109,12 @@ class PriorityQueue(abc.MutableSet):
         Checks if the queue is equal to the given one.
 
         Complexity: O(min(n, m)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue == PriorityQueue(*range(10))
+        True
+        >>> queue == PriorityQueue(*range(10), reverse=True)
+        False
         """
         return (self._items == other._items
                 if isinstance(other, PriorityQueue)
@@ -104,6 +125,10 @@ class PriorityQueue(abc.MutableSet):
         Returns number of elements in the queue.
 
         Complexity: O(1).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> len(queue)
+        10
         """
         return len(self._items)
 
@@ -112,6 +137,10 @@ class PriorityQueue(abc.MutableSet):
         Iterates over queue in sorted order.
 
         Complexity: O(n * log n).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> list(queue)
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         """
         return iter(sorted(self._values,
                            key=self._key,
@@ -122,6 +151,14 @@ class PriorityQueue(abc.MutableSet):
         Adds value to queue.
 
         Complexity: O(log n).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.add(-1)
+        >>> list(queue)
+        [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue.add(0)
+        >>> list(queue)
+        [-1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         """
         heapq.heappush(self._items, self._value_to_item(value))
 
@@ -130,6 +167,14 @@ class PriorityQueue(abc.MutableSet):
         Removes value from queue if present.
 
         Complexity: O(n).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.discard(-1)
+        >>> list(queue)
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue.discard(0)
+        >>> list(queue)
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
         """
         try:
             self._items.remove(self._value_to_item(value))
@@ -143,6 +188,16 @@ class PriorityQueue(abc.MutableSet):
         Returns front value from the queue.
 
         Complexity: O(1).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.peek()
+        0
+        >>> queue.add(-1)
+        >>> queue.peek()
+        -1
+        >>> queue.add(0)
+        >>> queue.peek()
+        -1
         """
         try:
             return self._item_to_value(self._items[0])
@@ -154,6 +209,16 @@ class PriorityQueue(abc.MutableSet):
         Pops front value from the queue.
 
         Complexity: O(1).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.pop()
+        0
+        >>> list(queue)
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue.pop()
+        1
+        >>> list(queue)
+        [2, 3, 4, 5, 6, 7, 8, 9]
         """
         try:
             return self._item_to_value(heapq.heappop(self._items))
@@ -165,5 +230,10 @@ class PriorityQueue(abc.MutableSet):
         Removes all values from the queue.
 
         Complexity: O(1).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.clear()
+        >>> list(queue)
+        []
         """
         self._items.clear()
