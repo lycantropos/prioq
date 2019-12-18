@@ -11,12 +11,23 @@ from prioq.hints import (Domain,
 class Reverser(ABC):
     @property
     @abstractmethod
+    def item(self) -> Domain:
+        """
+        Returns underlying item.
+        """
+
+    @property
+    @abstractmethod
     def value(self) -> Domain:
-        pass
+        """
+        Returns associated value.
+        """
 
     @abstractmethod
     def __lt__(self, other: 'Reverser') -> bool:
-        pass
+        """
+        Checks if the object is greater than the other.
+        """
 
 
 class SimpleReverser(Reverser):
@@ -29,10 +40,20 @@ class SimpleReverser(Reverser):
 
     @property
     def item(self) -> Domain:
+        """
+        >>> reverser = SimpleReverser(0)
+        >>> reverser.item
+        0
+        """
         return self._item
 
     @property
     def value(self) -> Domain:
+        """
+        >>> reverser = SimpleReverser(0)
+        >>> reverser.value
+        0
+        """
         return self._item
 
     def __lt__(self, other: 'SimpleReverser') -> bool:
@@ -56,10 +77,20 @@ class ComplexReverser(Reverser):
 
     @property
     def value(self) -> Domain:
+        """
+        >>> reverser = ComplexReverser((0, 1))
+        >>> reverser.value
+        1
+        """
         return self._item[1]
 
     @property
     def item(self) -> Domain:
+        """
+        >>> reverser = ComplexReverser((0, 1))
+        >>> reverser.item
+        (0, 1)
+        """
         return self._item
 
     def __lt__(self, other: 'ComplexReverser') -> bool:
