@@ -1,5 +1,5 @@
 prioq
-=========
+=====
 
 [![](https://travis-ci.com/lycantropos/prioq.svg?branch=master)](https://travis-ci.com/lycantropos/prioq "Travis CI")
 [![](https://dev.azure.com/lycantropos/prioq/_apis/build/status/lycantropos.prioq?branchName=master)](https://dev.azure.com/lycantropos/prioq/_build/latest?branchName=master "Azure Pipelines")
