@@ -6,6 +6,7 @@ from typing import (List,
 
 from hypothesis import strategies
 
+from prioq.base import PriorityQueue
 from prioq.hints import (Domain,
                          Key,
                          Range)
@@ -56,3 +57,11 @@ def to_values_lists_with_keys(
                                          max_size=max_size)
                         for min_size, max_size in sizes]
     return strategies.tuples(*lists_strategies, strategies.none() | keys)
+
+
+def to_priority_queue(values_with_key: Tuple[List[Domain], Optional[Key]],
+                      reverse: bool) -> PriorityQueue:
+    values, key = values_with_key
+    return PriorityQueue(*values,
+                         key=key,
+                         reverse=reverse)
