@@ -48,6 +48,8 @@ class PriorityQueue(abc.MutableSet):
         """
         Initializes queue.
 
+        Complexity: O(log n).
+
         :param values: initial values
         :param key: function of one argument to calculate priority.
         :param reverse:
@@ -136,7 +138,7 @@ class PriorityQueue(abc.MutableSet):
 
     def __iter__(self) -> Iterator[Domain]:
         """
-        Iterates over queue in sorted order.
+        Iterates over the queue in sorted order.
 
         Complexity: O(n * log n).
 
@@ -150,7 +152,7 @@ class PriorityQueue(abc.MutableSet):
 
     def add(self, value: Domain) -> None:
         """
-        Adds value to queue.
+        Adds value to the queue.
 
         Complexity: O(log n).
 
@@ -166,7 +168,7 @@ class PriorityQueue(abc.MutableSet):
 
     def discard(self, value: Domain) -> None:
         """
-        Removes value from queue if present.
+        Removes value from the queue if present.
 
         Complexity: O(n).
 
@@ -187,7 +189,7 @@ class PriorityQueue(abc.MutableSet):
 
     def peek(self) -> Domain:
         """
-        Returns front value from the queue.
+        Returns front value of the queue.
 
         Complexity: O(1).
 
