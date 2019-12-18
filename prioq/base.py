@@ -131,6 +131,18 @@ class PriorityQueue(MutableSet[Domain]):
         """
         return value in self.values
 
+    def __eq__(self, other: 'PriorityQueue') -> bool:
+        """
+        Checks if the queue is equal to the given one.
+
+        Complexity: O(min(n, m)).
+        """
+        return (self._key is other._key
+                and self._reverse is other._reverse
+                and self._items == other._items
+                if isinstance(other, PriorityQueue)
+                else NotImplemented)
+
     def __len__(self) -> int:
         """
         Returns number of elements in the queue.
