@@ -66,10 +66,20 @@ class ComplexReverser(Reverser):
 
     @property
     def value(self) -> Domain:
+        """
+        >>> reverser = ComplexReverser((0, 1))
+        >>> reverser.value
+        1
+        """
         return self._item[1]
 
     @property
     def item(self) -> Domain:
+        """
+        >>> reverser = ComplexReverser((0, 1))
+        >>> reverser.item
+        (0, 1)
+        """
         return self._item
 
     def __lt__(self, other: 'ComplexReverser') -> bool:
