@@ -1,12 +1,14 @@
 import heapq
 from abc import (ABC,
                  abstractmethod)
+from functools import partial
 from operator import (attrgetter,
                       itemgetter)
 from typing import (Iterator,
                     MutableSet,
                     Optional,
-                    Sequence)
+                    Sequence,
+                    Tuple)
 
 from reprit.base import generate_repr
 
@@ -29,8 +31,8 @@ class Reverser(ABC):
 class SimpleReverser(Reverser):
     __slots__ = ('_item',)
 
-    def __init__(self, value: Domain) -> None:
-        self._item = value
+    def __init__(self, item: Domain) -> None:
+        self._item = item
 
     __repr__ = generate_repr(__init__)
 
@@ -47,14 +49,10 @@ class SimpleReverser(Reverser):
 class ComplexReverser(Reverser):
     __slots__ = ('_item',)
 
-    def __init__(self, key: Range, value: Domain) -> None:
-        self._item = (key, value)
+    def __init__(self, item: Tuple[Range, Domain]) -> None:
+        self._item = item
 
     __repr__ = generate_repr(__init__)
-
-    @property
-    def key(self) -> Range:
-        return self._item[0]
 
     @property
     def value(self) -> Domain:
@@ -69,7 +67,11 @@ class ComplexReverser(Reverser):
 def reverse_key(key: Optional[Key]) -> Key:
     return (SimpleReverser
             if key is None
-            else lambda value: ComplexReverser(key(value), value))
+            else lambda value: ComplexReverser(_to_item(key, value)))
+
+
+def _to_item(key: Key, value: Domain) -> Tuple[Range, Domain]:
+    return key(value), value
 
 
 class PriorityQueue(MutableSet[Domain]):
@@ -96,10 +98,14 @@ class PriorityQueue(MutableSet[Domain]):
         """
         self._key = key
         self._reverse = reverse
-        self._value_to_item = reverse_key(key) if reverse else key or identity
+        self._value_to_item = (reverse_key(key)
+                               if reverse
+                               else (identity if key is None
+                                     else partial(_to_item, key)))
         self._item_to_value = (attrgetter('value')
                                if reverse
-                               else identity if key is None else itemgetter(1))
+                               else (identity if key is None
+                                     else itemgetter(1)))
         self._items = [self._value_to_item(value) for value in values]
         heapq.heapify(self._items)
 
