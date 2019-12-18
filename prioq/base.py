@@ -37,11 +37,20 @@ class SimpleReverser(Reverser):
     __repr__ = generate_repr(__init__)
 
     @property
+    def item(self) -> Domain:
+        return self._item
+
+    @property
     def value(self) -> Domain:
         return self._item
 
     def __lt__(self, other: 'SimpleReverser') -> bool:
         return (self._item > other._item
+                if isinstance(other, SimpleReverser)
+                else NotImplemented)
+
+    def __eq__(self, other: 'SimpleReverser') -> bool:
+        return (self._item == other._item
                 if isinstance(other, SimpleReverser)
                 else NotImplemented)
 
@@ -58,8 +67,17 @@ class ComplexReverser(Reverser):
     def value(self) -> Domain:
         return self._item[1]
 
+    @property
+    def item(self) -> Domain:
+        return self._item
+
     def __lt__(self, other: 'ComplexReverser') -> bool:
         return (self._item > other._item
+                if isinstance(other, ComplexReverser)
+                else NotImplemented)
+
+    def __eq__(self, other: 'ComplexReverser') -> bool:
+        return (self._item == other._item
                 if isinstance(other, ComplexReverser)
                 else NotImplemented)
 
@@ -137,9 +155,7 @@ class PriorityQueue(MutableSet[Domain]):
 
         Complexity: O(min(n, m)).
         """
-        return (self._key is other._key
-                and self._reverse is other._reverse
-                and self._items == other._items
+        return (self._items == other._items
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
