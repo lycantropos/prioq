@@ -1,11 +1,11 @@
 import heapq
 from abc import (ABC,
                  abstractmethod)
+from collections import abc
 from functools import partial
 from operator import (attrgetter,
                       itemgetter)
 from typing import (Iterator,
-                    MutableSet,
                     Optional,
                     Sequence,
                     Tuple)
@@ -96,7 +96,7 @@ def _to_item(key: Key, value: Domain) -> Tuple[Range, Domain]:
     return key(value), value
 
 
-class PriorityQueue(MutableSet[Domain]):
+class PriorityQueue(abc.MutableSet):
     """
     A priority queue is a mutable container
     that provides constant time lookup of the smallest (by default) element.
