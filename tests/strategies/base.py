@@ -42,3 +42,9 @@ non_empty_values_lists_with_keys = (values_with_keys_strategies
                                                      sizes=[(1, None)])))
 priority_queues = strategies.builds(to_priority_queue,
                                     values_lists_with_keys, booleans)
+empty_priority_queues = strategies.builds(to_priority_queue,
+                                          empty_values_lists_with_keys,
+                                          booleans)
+non_empty_priority_queues = strategies.builds(to_priority_queue,
+                                              non_empty_values_lists_with_keys,
+                                              booleans)
