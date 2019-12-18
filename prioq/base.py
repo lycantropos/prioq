@@ -55,6 +55,7 @@ class PriorityQueue(abc.MutableSet):
             that values should be processed in descending order
             (from highest priority to lowest).
 
+        >>> from prioq.base import PriorityQueue
         >>> values = range(-5, 6)
         >>> queue = PriorityQueue(*values, key=abs, reverse=True)
         >>> all(value in queue for value in values)
