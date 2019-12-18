@@ -6,6 +6,7 @@ from hypothesis import strategies
 
 from prioq.utils import identity
 from .factories import (to_priority_queue,
+                        to_priority_queue_with_value,
                         to_values_lists_with_keys,
                         to_values_tuples_with_keys,
                         to_values_with_keys)
@@ -48,3 +49,6 @@ empty_priority_queues = strategies.builds(to_priority_queue,
 non_empty_priority_queues = strategies.builds(to_priority_queue,
                                               non_empty_values_lists_with_keys,
                                               booleans)
+priority_queues_with_values = strategies.builds(
+        to_priority_queue_with_value, non_empty_values_lists_with_keys,
+        booleans)

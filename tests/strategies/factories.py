@@ -63,3 +63,15 @@ def to_priority_queue(values_with_key: Tuple[List[Domain], Optional[Key]],
     return PriorityQueue(*values,
                          key=key,
                          reverse=reverse)
+
+
+def to_priority_queue_with_value(values_with_key: Tuple[List[Domain],
+                                                        Optional[Key]],
+                                 reverse: bool
+                                 ) -> Tuple[PriorityQueue, Domain]:
+    values, key = values_with_key
+    value, *rest_values = values
+    return (PriorityQueue(*rest_values,
+                          key=key,
+                          reverse=reverse),
+            value)
