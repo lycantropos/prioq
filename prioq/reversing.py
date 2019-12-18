@@ -1,0 +1,73 @@
+from abc import (ABC,
+                 abstractmethod)
+from typing import Tuple
+
+from reprit.base import generate_repr
+
+from prioq.hints import (Domain,
+                         Range)
+
+
+class Reverser(ABC):
+    @property
+    @abstractmethod
+    def value(self) -> Domain:
+        pass
+
+    @abstractmethod
+    def __lt__(self, other: 'Reverser') -> bool:
+        pass
+
+
+class SimpleReverser(Reverser):
+    __slots__ = ('_item',)
+
+    def __init__(self, item: Domain) -> None:
+        self._item = item
+
+    __repr__ = generate_repr(__init__)
+
+    @property
+    def item(self) -> Domain:
+        return self._item
+
+    @property
+    def value(self) -> Domain:
+        return self._item
+
+    def __lt__(self, other: 'SimpleReverser') -> bool:
+        return (self._item > other._item
+                if isinstance(other, SimpleReverser)
+                else NotImplemented)
+
+    def __eq__(self, other: 'SimpleReverser') -> bool:
+        return (self._item == other._item
+                if isinstance(other, SimpleReverser)
+                else NotImplemented)
+
+
+class ComplexReverser(Reverser):
+    __slots__ = ('_item',)
+
+    def __init__(self, item: Tuple[Range, Domain]) -> None:
+        self._item = item
+
+    __repr__ = generate_repr(__init__)
+
+    @property
+    def value(self) -> Domain:
+        return self._item[1]
+
+    @property
+    def item(self) -> Domain:
+        return self._item
+
+    def __lt__(self, other: 'ComplexReverser') -> bool:
+        return (self._item > other._item
+                if isinstance(other, ComplexReverser)
+                else NotImplemented)
+
+    def __eq__(self, other: 'ComplexReverser') -> bool:
+        return (self._item == other._item
+                if isinstance(other, ComplexReverser)
+                else NotImplemented)
