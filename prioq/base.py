@@ -164,9 +164,8 @@ class PriorityQueue(Generic[Domain]):
         >>> list(reversed(queue))
         [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
         """
-        return iter(sorted(self._values,
-                           key=self._key,
-                           reverse=not self._reverse))
+        self._items = sorted(self._items)
+        return iter(self._values[::-1])
 
     def __eq__(self, other: 'PriorityQueue[Domain]') -> bool:
         """
