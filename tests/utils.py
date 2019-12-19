@@ -1,12 +1,23 @@
 import pickle
 from typing import (Any,
-                    Iterable)
+                    Iterable,
+                    List,
+                    Optional,
+                    Tuple)
 
 from hypothesis.strategies import SearchStrategy
 
-from prioq.hints import Domain
+from prioq.base import PriorityQueue
+from prioq.hints import (Domain,
+                         Key)
 
 Strategy = SearchStrategy
+ValuesListWithKey = Tuple[List[Domain], Optional[Key]]
+ValuesListsPairWithKey = Tuple[List[Domain], List[Domain], Optional[Key]]
+ValuesListsTripletWithKey = Tuple[List[Domain], List[Domain], List[Domain],
+                                  Optional[Key]]
+PriorityQueuesPair = Tuple[PriorityQueue, PriorityQueue]
+PriorityQueuesTriplet = Tuple[PriorityQueue, PriorityQueue, PriorityQueue]
 
 
 def equivalence(left_statement: bool, right_statement: bool) -> bool:
