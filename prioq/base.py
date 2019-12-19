@@ -296,6 +296,27 @@ class PriorityQueue(Generic[Domain]):
         """
         heapq.heappush(self._items, self._value_to_item(value))
 
+    def remove(self, value: Domain) -> None:
+        """
+        Removes value from the queue and if absent raises `KeyError`.
+
+        Complexity: O(len(self)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.remove(0)
+        >>> list(queue)
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue.remove(9)
+        >>> list(queue)
+        [1, 2, 3, 4, 5, 6, 7, 8]
+        """
+        try:
+            self._items.remove(self._value_to_item(value))
+        except ValueError:
+            raise KeyError(value)
+        else:
+            heapq.heapify(self._items)
+
     def discard(self, value: Domain) -> None:
         """
         Removes value from the queue if present.
@@ -311,11 +332,9 @@ class PriorityQueue(Generic[Domain]):
         [1, 2, 3, 4, 5, 6, 7, 8, 9]
         """
         try:
-            self._items.remove(self._value_to_item(value))
-        except ValueError:
+            self.remove(value)
+        except KeyError:
             pass
-        else:
-            heapq.heapify(self._items)
 
     def peek(self) -> Domain:
         """
