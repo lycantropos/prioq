@@ -86,6 +86,19 @@ class PriorityQueue(Generic[Domain]):
 
     __repr__ = generate_repr(__init__)
 
+    if sys.version_info < (3, 6):
+        # caused by https://github.com/python/typing/issues/498
+        def __copy__(self) -> 'PriorityQueue[Domain]':
+            """
+            Returns a shallow copy of the queue.
+
+            Complexity: O(1).
+            """
+            result = PriorityQueue(key=self._key,
+                                   reverse=self._reverse)
+            result._items = self._items
+            return result
+
     @property
     def _values(self) -> Sequence[Domain]:
         return [self._item_to_value(item) for item in self._items]
