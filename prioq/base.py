@@ -17,7 +17,9 @@ from .hints import (Domain,
                     Range)
 from .reversing import (ComplexReverser,
                         SimpleReverser)
-from .utils import identity
+from .utils import (identity,
+                    intersect_sorted,
+                    subtract_sorted)
 
 
 def reverse_key(key: Optional[Key]) -> Key:
@@ -278,6 +280,162 @@ class PriorityQueue(Generic[Domain]):
         if not isinstance(other, PriorityQueue):
             return NotImplemented
         return len(self) < len(other) and self <= other and self != other
+
+    def __and__(self, other: 'PriorityQueue[Domain]'
+                ) -> 'PriorityQueue[Domain]':
+        """
+        Returns intersection of the queue with given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> list(queue & PriorityQueue(*range(10)))
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> list(queue & PriorityQueue(*range(10), reverse=True))
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> list(queue & PriorityQueue(*range(20)))
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> list(queue & PriorityQueue(*range(5)))
+        [0, 1, 2, 3, 4]
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        if self._key is other._key:
+            other_values = list(other
+                                if self._reverse is other._reverse
+                                else reversed(other))
+        else:
+            other_values = sorted(other._values,
+                                  key=self._key,
+                                  reverse=self._reverse)
+        return PriorityQueue(*intersect_sorted(list(self), other_values,
+                                               key=self._key,
+                                               reverse=self._reverse),
+                             key=self._key,
+                             reverse=self._reverse)
+
+    def __or__(self, other: 'PriorityQueue[Domain]'
+               ) -> 'PriorityQueue[Domain]':
+        """
+        Returns union of the queue with given one.
+
+        Complexity: O(len(self) + len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> list(queue | PriorityQueue(*range(10)))
+        [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9]
+        >>> list(queue | PriorityQueue(*range(10), reverse=True))
+        [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9]
+        >>> list(queue | PriorityQueue(*range(5)))
+        [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 6, 7, 8, 9]
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        return PriorityQueue(*self._values, *other._values,
+                             key=self._key,
+                             reverse=self._reverse)
+
+    def __sub__(self, other: 'PriorityQueue[Domain]'
+                ) -> 'PriorityQueue[Domain]':
+        """
+        Returns subtraction of the queue with given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> list(queue - PriorityQueue(*range(10)))
+        []
+        >>> list(queue - PriorityQueue(*range(10), reverse=True))
+        []
+        >>> list(queue - PriorityQueue(*range(20)))
+        []
+        >>> list(queue - PriorityQueue(*range(5)))
+        [5, 6, 7, 8, 9]
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        if self._key is other._key:
+            other_values = list(other
+                                if self._reverse is other._reverse
+                                else reversed(other))
+        else:
+            other_values = sorted(other._values,
+                                  key=self._key,
+                                  reverse=self._reverse)
+        return PriorityQueue(*subtract_sorted(list(self), other_values,
+                                              key=self._key,
+                                              reverse=self._reverse),
+                             key=self._key,
+                             reverse=self._reverse)
+
+    def __xor__(self, other: 'PriorityQueue[Domain]'
+                ) -> 'PriorityQueue[Domain]':
+        """
+        Returns symmetric difference of the queue with given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> list(queue ^ PriorityQueue(*range(10)))
+        []
+        >>> list(queue ^ PriorityQueue(*range(10), reverse=True))
+        []
+        >>> list(queue ^ PriorityQueue(*range(20)))
+        [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+        >>> list(queue ^ PriorityQueue(*range(5)))
+        [5, 6, 7, 8, 9]
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        return (self - other) | (other - self)
+
+    def __iand__(self, other: 'PriorityQueue[Domain]'
+                 ) -> 'PriorityQueue[Domain]':
+        """
+        Intersects the queue with given one in-place.
+
+        Complexity: O(len(self) * len(other)).
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        self._items = (self & other)._items
+        return self
+
+    def __ior__(self, other: 'PriorityQueue[Domain]'
+                ) -> 'PriorityQueue[Domain]':
+        """
+        Unites the queue with given one in-place.
+
+        Complexity: O(len(self) + len(other)).
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        self._items = (self | other)._items
+        return self
+
+    def __ixor__(self, other: 'PriorityQueue[Domain]'
+                 ) -> 'PriorityQueue[Domain]':
+        """
+        Exclusively disjoins the queue with given one in-place.
+
+        Complexity: O(len(self) * len(other)).
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        self._items = (self ^ other)._items
+        return self
+
+    def __isub__(self, other: 'PriorityQueue[Domain]'
+                 ) -> 'PriorityQueue[Domain]':
+        """
+        Subtracts from the queue a given one in-place.
+
+        Complexity: O(len(self) * len(other))
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        self._items = (self - other)._items
+        return self
 
     def isdisjoint(self, other: 'PriorityQueue[Domain]') -> bool:
         """
