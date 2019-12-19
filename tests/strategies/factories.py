@@ -75,3 +75,10 @@ def to_priority_queue_with_value(values_with_key: Tuple[List[Domain],
                           key=key,
                           reverse=reverse),
             value)
+
+
+def to_priority_queues_with_their_values(queue: PriorityQueue
+                                         ) -> Strategy[Tuple[PriorityQueue,
+                                                             Domain]]:
+    return strategies.tuples(strategies.just(queue),
+                             strategies.sampled_from(list(queue)))

@@ -7,6 +7,7 @@ from hypothesis import strategies
 from prioq.utils import identity
 from .factories import (to_priority_queue,
                         to_priority_queue_with_value,
+                        to_priority_queues_with_their_values,
                         to_values_lists_with_keys,
                         to_values_tuples_with_keys,
                         to_values_with_keys)
@@ -41,6 +42,12 @@ empty_values_lists_with_keys = (values_with_keys_strategies
 non_empty_values_lists_with_keys = (values_with_keys_strategies
                                     .flatmap(partial(to_values_lists_with_keys,
                                                      sizes=[(1, None)])))
+single_values_with_keys = (values_with_keys_strategies
+                           .flatmap(partial(to_values_lists_with_keys,
+                                            sizes=[(1, 1)])))
+two_or_more_values_with_keys = (values_with_keys_strategies
+                                .flatmap(partial(to_values_lists_with_keys,
+                                                 sizes=[(2, None)])))
 priority_queues = strategies.builds(to_priority_queue,
                                     values_lists_with_keys, booleans)
 empty_priority_queues = strategies.builds(to_priority_queue,
@@ -52,3 +59,9 @@ non_empty_priority_queues = strategies.builds(to_priority_queue,
 priority_queues_with_values = strategies.builds(
         to_priority_queue_with_value, non_empty_values_lists_with_keys,
         booleans)
+empty_priority_queues_with_values = strategies.builds(
+        to_priority_queue_with_value, single_values_with_keys, booleans)
+non_empty_priority_queues_with_values = strategies.builds(
+        to_priority_queue_with_value, two_or_more_values_with_keys, booleans)
+non_empty_priority_queues_with_their_values = (
+    non_empty_priority_queues.flatmap(to_priority_queues_with_their_values))
