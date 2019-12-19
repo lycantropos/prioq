@@ -1,9 +1,11 @@
 import heapq
-from collections import abc
+import sys
 from functools import partial
 from operator import (attrgetter,
                       itemgetter)
-from typing import (Iterator,
+from typing import (Generic,
+                    Iterator,
+                    MutableSet,
                     Optional,
                     Sequence,
                     Tuple)
@@ -12,6 +14,7 @@ from reprit.base import generate_repr
 
 from .hints import (Domain,
                     Key,
+                    OtherDomain,
                     Range)
 from .reversing import (ComplexReverser,
                         SimpleReverser)
@@ -32,7 +35,8 @@ def _to_item(key: Key, value: Domain) -> Tuple[Range, Domain]:
     return key(value), value
 
 
-class PriorityQueue(abc.MutableSet):
+@MutableSet.register
+class PriorityQueue(Generic[Domain]):
     """
     A priority queue is a mutable container
     that provides constant time lookup of the smallest (by default) element.
@@ -108,7 +112,7 @@ class PriorityQueue(abc.MutableSet):
         """
         return value in self._values
 
-    def __eq__(self, other: 'PriorityQueue') -> bool:
+    def __eq__(self, other: 'PriorityQueue[OtherDomain]') -> bool:
         """
         Checks if the queue is equal to the given one.
 
