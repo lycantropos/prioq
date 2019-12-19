@@ -4,7 +4,12 @@ from operator import not_
 
 from hypothesis import strategies
 
+from prioq.base import PriorityQueue
 from prioq.utils import identity
+from tests.utils import (PriorityQueuesPair,
+                         PriorityQueuesTriplet,
+                         ValuesListsPairWithKey,
+                         ValuesListsTripletWithKey)
 from .factories import (to_priority_queue,
                         to_priority_queue_with_value,
                         to_priority_queues_with_their_values,
@@ -65,3 +70,49 @@ non_empty_priority_queues_with_values = strategies.builds(
         to_priority_queue_with_value, two_or_more_values_with_keys, booleans)
 non_empty_priority_queues_with_their_values = (
     non_empty_priority_queues.flatmap(to_priority_queues_with_their_values))
+
+
+def to_priority_queues_pair(values_lists_pair_with_key: ValuesListsPairWithKey,
+                            first_reverse: bool,
+                            second_reverse: bool) -> PriorityQueuesPair:
+    first_values_list, second_values_list, key = values_lists_pair_with_key
+    first_priority_queue = PriorityQueue(*first_values_list,
+                                         key=key,
+                                         reverse=first_reverse)
+    second_priority_queue = PriorityQueue(*second_values_list,
+                                          key=key,
+                                          reverse=second_reverse)
+    return first_priority_queue, second_priority_queue
+
+
+priority_queues_pairs = strategies.builds(
+        to_priority_queues_pair,
+        values_with_keys_strategies.flatmap(partial(to_values_lists_with_keys,
+                                                    sizes=[(0, None)] * 2)),
+        booleans, booleans)
+
+
+def to_priority_queues_triplet(
+        values_lists_triplet_with_key: ValuesListsTripletWithKey,
+        first_reverse: bool,
+        second_reverse: bool,
+        third_reverse: bool) -> PriorityQueuesTriplet:
+    (first_values_list, second_values_list,
+     third_values_list, key) = values_lists_triplet_with_key
+    first_priority_queue = PriorityQueue(*first_values_list,
+                                         key=key,
+                                         reverse=first_reverse)
+    second_priority_queue = PriorityQueue(*second_values_list,
+                                          key=key,
+                                          reverse=second_reverse)
+    third_priority_queue = PriorityQueue(*third_values_list,
+                                         key=key,
+                                         reverse=third_reverse)
+    return first_priority_queue, second_priority_queue, third_priority_queue
+
+
+priority_queues_triplets = strategies.builds(
+        to_priority_queues_triplet,
+        values_with_keys_strategies.flatmap(partial(to_values_lists_with_keys,
+                                                    sizes=[(0, None)] * 3)),
+        booleans, booleans, booleans)
