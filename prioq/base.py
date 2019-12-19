@@ -188,17 +188,17 @@ class PriorityQueue(Generic[Value]):
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
-    def add(self, value: Value) -> None:
+    def push(self, value: Value) -> None:
         """
         Adds value to the queue.
 
         Complexity: O(log len(self)).
 
         >>> queue = PriorityQueue(*range(10))
-        >>> queue.add(-1)
+        >>> queue.push(-1)
         >>> list(queue)
         [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        >>> queue.add(0)
+        >>> queue.push(0)
         >>> list(queue)
         [-1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         """
@@ -253,10 +253,10 @@ class PriorityQueue(Generic[Value]):
         >>> queue = PriorityQueue(*range(10))
         >>> queue.peek()
         0
-        >>> queue.add(-1)
+        >>> queue.push(-1)
         >>> queue.peek()
         -1
-        >>> queue.add(0)
+        >>> queue.push(0)
         >>> queue.peek()
         -1
         """
