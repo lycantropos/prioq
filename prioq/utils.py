@@ -3,18 +3,18 @@ from operator import (gt,
 from typing import (Iterable,
                     Optional)
 
-from .hints import (Domain,
-                    Key)
+from .hints import (SortingKey,
+                    Value)
 
 
-def identity(value: Domain) -> Domain:
+def identity(value: Value) -> Value:
     return value
 
 
-def intersect_sorted(left: Iterable[Domain], right: Iterable[Domain],
+def intersect_sorted(left: Iterable[Value], right: Iterable[Value],
                      *,
-                     key: Optional[Key],
-                     reverse: bool) -> Iterable[Domain]:
+                     key: Optional[SortingKey],
+                     reverse: bool) -> Iterable[Value]:
     """
     Returns intersection of sorted iterables.
 
@@ -72,10 +72,10 @@ def intersect_sorted(left: Iterable[Domain], right: Iterable[Domain],
                     return
 
 
-def subtract_sorted(left: Iterable[Domain], right: Iterable[Domain],
+def subtract_sorted(left: Iterable[Value], right: Iterable[Value],
                     *,
-                    key: Optional[Key],
-                    reverse: bool) -> Iterable[Domain]:
+                    key: Optional[SortingKey],
+                    reverse: bool) -> Iterable[Value]:
     """
     Returns subtraction of sorted iterables.
 

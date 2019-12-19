@@ -3,12 +3,12 @@ from typing import Tuple
 from hypothesis import given
 
 from prioq.base import PriorityQueue
-from prioq.hints import Domain
+from prioq.hints import Value
 from tests import strategies
 
 
 @given(strategies.priority_queues_with_values)
-def test_basic(priority_queue_with_value: Tuple[PriorityQueue, Domain]
+def test_basic(priority_queue_with_value: Tuple[PriorityQueue, Value]
                ) -> None:
     priority_queue, value = priority_queue_with_value
 
@@ -18,7 +18,7 @@ def test_basic(priority_queue_with_value: Tuple[PriorityQueue, Domain]
 
 
 @given(strategies.priority_queues_with_values)
-def test_properties(priority_queue_with_value: Tuple[PriorityQueue, Domain]
+def test_properties(priority_queue_with_value: Tuple[PriorityQueue, Value]
                     ) -> None:
     priority_queue, value = priority_queue_with_value
 

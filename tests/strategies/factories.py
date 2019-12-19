@@ -8,20 +8,20 @@ from typing import (List,
 from hypothesis import strategies
 
 from prioq.base import PriorityQueue
-from prioq.hints import (Domain,
-                         Key,
-                         Range)
+from prioq.hints import (Key,
+                         SortingKey,
+                         Value)
 from tests.utils import Strategy
 
 
 def to_values_tuples_with_keys(
-        values_with_keys: Strategy[Tuple[Strategy[Domain],
-                                         Strategy[Key]]]
-) -> Strategy[Tuple[Strategy[Tuple[Domain, ...]], Strategy[Key]]]:
+        values_with_keys: Strategy[Tuple[Strategy[Value],
+                                         Strategy[SortingKey]]]
+) -> Strategy[Tuple[Strategy[Tuple[Value, ...]], Strategy[SortingKey]]]:
     def to_values_tuples_with_key(
-            values_with_keys_list: List[Strategy[Tuple[Domain, Key]]]
-    ) -> Tuple[Strategy[Tuple[Domain, ...]], Strategy[Key]]:
-        def combine_keys(keys: Sequence[Key]) -> Key:
+            values_with_keys_list: List[Strategy[Tuple[Value, SortingKey]]]
+    ) -> Tuple[Strategy[Tuple[Value, ...]], Strategy[SortingKey]]:
+        def combine_keys(keys: Sequence[SortingKey]) -> SortingKey:
             return partial(combined, keys)
 
         return (strategies.tuples(*map(itemgetter(0), values_with_keys_list)),
@@ -33,22 +33,22 @@ def to_values_tuples_with_keys(
             .map(to_values_tuples_with_key))
 
 
-def combined(keys: Sequence[Key], values: Sequence[Domain]) -> Range:
+def combined(keys: Sequence[SortingKey], values: Sequence[Value]) -> Key:
     return tuple(key(arg) for key, arg in zip(keys, values))
 
 
-def to_values_with_keys(values_with_keys: Tuple[Strategy[Domain],
-                                                Strategy[Key]]
-                        ) -> Strategy[Tuple[Domain, Optional[Key]]]:
+def to_values_with_keys(values_with_keys: Tuple[Strategy[Value],
+                                                Strategy[SortingKey]]
+                        ) -> Strategy[Tuple[Value, Optional[SortingKey]]]:
     values, keys = values_with_keys
     return strategies.tuples(values, strategies.none() | keys)
 
 
 def to_values_lists_with_keys(
-        values_with_keys: Tuple[Strategy[Domain], Strategy[Key]],
+        values_with_keys: Tuple[Strategy[Value], Strategy[SortingKey]],
         *,
         sizes: Sequence[Tuple[int, Optional[int]]] = ((0, None),)
-) -> Strategy[Tuple[List[Domain], Optional[Key]]]:
+) -> Strategy[Tuple[List[Value], Optional[SortingKey]]]:
     values, keys = values_with_keys
     lists_strategies = [strategies.lists(values,
                                          min_size=min_size,
@@ -57,7 +57,8 @@ def to_values_lists_with_keys(
     return strategies.tuples(*lists_strategies, strategies.none() | keys)
 
 
-def to_priority_queue(values_with_key: Tuple[List[Domain], Optional[Key]],
+def to_priority_queue(values_with_key: Tuple[List[Value],
+                                             Optional[SortingKey]],
                       reverse: bool) -> PriorityQueue:
     values, key = values_with_key
     return PriorityQueue(*values,
@@ -65,10 +66,10 @@ def to_priority_queue(values_with_key: Tuple[List[Domain], Optional[Key]],
                          reverse=reverse)
 
 
-def to_priority_queue_with_value(values_with_key: Tuple[List[Domain],
-                                                        Optional[Key]],
+def to_priority_queue_with_value(values_with_key: Tuple[List[Value],
+                                                        Optional[SortingKey]],
                                  reverse: bool
-                                 ) -> Tuple[PriorityQueue, Domain]:
+                                 ) -> Tuple[PriorityQueue, Value]:
     values, key = values_with_key
     value, *rest_values = values
     return (PriorityQueue(*rest_values,
@@ -79,6 +80,6 @@ def to_priority_queue_with_value(values_with_key: Tuple[List[Domain],
 
 def to_priority_queues_with_their_values(queue: PriorityQueue
                                          ) -> Strategy[Tuple[PriorityQueue,
-                                                             Domain]]:
+                                                             Value]]:
     return strategies.tuples(strategies.just(queue),
                              strategies.sampled_from(list(queue)))

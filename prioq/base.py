@@ -12,9 +12,9 @@ from typing import (Generic,
 
 from reprit.base import generate_repr
 
-from .hints import (Domain,
-                    Key,
-                    Range)
+from .hints import (Key,
+                    SortingKey,
+                    Value)
 from .reversing import (ComplexReverser,
                         SimpleReverser)
 from .utils import (identity,
@@ -22,22 +22,22 @@ from .utils import (identity,
                     subtract_sorted)
 
 
-def reverse_key(key: Optional[Key]) -> Key:
+def reverse_key(key: Optional[SortingKey]) -> SortingKey:
     return (SimpleReverser
             if key is None
             else partial(_to_complex_reverser, key))
 
 
-def _to_complex_reverser(key: Key, value: Domain) -> ComplexReverser:
+def _to_complex_reverser(key: SortingKey, value: Value) -> ComplexReverser:
     return ComplexReverser(_to_item(key, value))
 
 
-def _to_item(key: Key, value: Domain) -> Tuple[Range, Domain]:
+def _to_item(key: SortingKey, value: Value) -> Tuple[Key, Value]:
     return key(value), value
 
 
 @MutableSet.register
-class PriorityQueue(Generic[Domain]):
+class PriorityQueue(Generic[Value]):
     """
     A priority queue is a mutable container
     that provides constant time lookup of the smallest (by default) element.
@@ -47,8 +47,8 @@ class PriorityQueue(Generic[Domain]):
     __slots__ = ('_key', '_reverse', '_items',
                  '_item_to_value', '_value_to_item')
 
-    def __init__(self, *_values: Domain,
-                 key: Optional[Key] = None,
+    def __init__(self, *_values: Value,
+                 key: Optional[SortingKey] = None,
                  reverse: bool = False) -> None:
         """
         Initializes queue.
@@ -89,7 +89,7 @@ class PriorityQueue(Generic[Domain]):
 
     if sys.version_info < (3, 6, 4):
         # caused by https://github.com/python/typing/issues/498
-        def __copy__(self) -> 'PriorityQueue[Domain]':
+        def __copy__(self) -> 'PriorityQueue[Value]':
             """
             Returns a shallow copy of the queue.
 
@@ -106,7 +106,7 @@ class PriorityQueue(Generic[Domain]):
             return result
 
     @property
-    def _values(self) -> Sequence[Domain]:
+    def _values(self) -> Sequence[Value]:
         return [self._item_to_value(item) for item in self._items]
 
     @property
@@ -114,10 +114,10 @@ class PriorityQueue(Generic[Domain]):
         return self._reverse
 
     @property
-    def key(self) -> Optional[Key]:
+    def key(self) -> Optional[SortingKey]:
         return self._key
 
-    def __contains__(self, value: Domain) -> bool:
+    def __contains__(self, value: Value) -> bool:
         """
         Checks if value is present in the queue.
 
@@ -143,7 +143,7 @@ class PriorityQueue(Generic[Domain]):
         """
         return len(self._items)
 
-    def __iter__(self) -> Iterator[Domain]:
+    def __iter__(self) -> Iterator[Value]:
         """
         Iterates over the queue in sorted order.
 
@@ -156,7 +156,7 @@ class PriorityQueue(Generic[Domain]):
         self._items = sorted(self._items)
         return iter(self._values)
 
-    def __reversed__(self) -> Iterator[Domain]:
+    def __reversed__(self) -> Iterator[Value]:
         """
         Iterates over the queue in reversed order.
 
@@ -169,7 +169,7 @@ class PriorityQueue(Generic[Domain]):
         self._items = sorted(self._items)
         return iter(self._values[::-1])
 
-    def __eq__(self, other: 'PriorityQueue[Domain]') -> bool:
+    def __eq__(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue is equal to the given one.
 
@@ -189,7 +189,7 @@ class PriorityQueue(Generic[Domain]):
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
-    def __ge__(self, other: 'PriorityQueue[Domain]') -> bool:
+    def __ge__(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue is a superset of given one.
 
@@ -215,7 +215,7 @@ class PriorityQueue(Generic[Domain]):
             values, other_values = iter(self), iter(other)
             return all(value in values for value in other_values)
 
-    def __gt__(self, other: 'PriorityQueue[Domain]') -> bool:
+    def __gt__(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue is a strict superset of given one.
 
@@ -235,7 +235,7 @@ class PriorityQueue(Generic[Domain]):
             return NotImplemented
         return len(self) > len(other) and self >= other and self != other
 
-    def __le__(self, other: 'PriorityQueue[Domain]') -> bool:
+    def __le__(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue is a subset of given one.
 
@@ -261,7 +261,7 @@ class PriorityQueue(Generic[Domain]):
             values, other_values = iter(self), iter(other)
             return all(value in other_values for value in values)
 
-    def __lt__(self, other: 'PriorityQueue[Domain]') -> bool:
+    def __lt__(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue is a strict subset of given one.
 
@@ -281,8 +281,7 @@ class PriorityQueue(Generic[Domain]):
             return NotImplemented
         return len(self) < len(other) and self <= other and self != other
 
-    def __and__(self, other: 'PriorityQueue[Domain]'
-                ) -> 'PriorityQueue[Domain]':
+    def __and__(self, other: 'PriorityQueue[Value]') -> 'PriorityQueue[Value]':
         """
         Returns intersection of the queue with given one.
 
@@ -314,8 +313,7 @@ class PriorityQueue(Generic[Domain]):
                              key=self._key,
                              reverse=self._reverse)
 
-    def __or__(self, other: 'PriorityQueue[Domain]'
-               ) -> 'PriorityQueue[Domain]':
+    def __or__(self, other: 'PriorityQueue[Value]') -> 'PriorityQueue[Value]':
         """
         Returns union of the queue with given one.
 
@@ -335,8 +333,7 @@ class PriorityQueue(Generic[Domain]):
                              key=self._key,
                              reverse=self._reverse)
 
-    def __sub__(self, other: 'PriorityQueue[Domain]'
-                ) -> 'PriorityQueue[Domain]':
+    def __sub__(self, other: 'PriorityQueue[Value]') -> 'PriorityQueue[Value]':
         """
         Returns subtraction of the queue with given one.
 
@@ -368,8 +365,7 @@ class PriorityQueue(Generic[Domain]):
                              key=self._key,
                              reverse=self._reverse)
 
-    def __xor__(self, other: 'PriorityQueue[Domain]'
-                ) -> 'PriorityQueue[Domain]':
+    def __xor__(self, other: 'PriorityQueue[Value]') -> 'PriorityQueue[Value]':
         """
         Returns symmetric difference of the queue with given one.
 
@@ -389,8 +385,8 @@ class PriorityQueue(Generic[Domain]):
             return NotImplemented
         return (self - other) | (other - self)
 
-    def __iand__(self, other: 'PriorityQueue[Domain]'
-                 ) -> 'PriorityQueue[Domain]':
+    def __iand__(self, other: 'PriorityQueue[Value]'
+                 ) -> 'PriorityQueue[Value]':
         """
         Intersects the queue with given one in-place.
 
@@ -401,8 +397,7 @@ class PriorityQueue(Generic[Domain]):
         self._items = (self & other)._items
         return self
 
-    def __ior__(self, other: 'PriorityQueue[Domain]'
-                ) -> 'PriorityQueue[Domain]':
+    def __ior__(self, other: 'PriorityQueue[Value]') -> 'PriorityQueue[Value]':
         """
         Unites the queue with given one in-place.
 
@@ -413,8 +408,8 @@ class PriorityQueue(Generic[Domain]):
         self._items = (self | other)._items
         return self
 
-    def __ixor__(self, other: 'PriorityQueue[Domain]'
-                 ) -> 'PriorityQueue[Domain]':
+    def __ixor__(self, other: 'PriorityQueue[Value]'
+                 ) -> 'PriorityQueue[Value]':
         """
         Exclusively disjoins the queue with given one in-place.
 
@@ -425,8 +420,8 @@ class PriorityQueue(Generic[Domain]):
         self._items = (self ^ other)._items
         return self
 
-    def __isub__(self, other: 'PriorityQueue[Domain]'
-                 ) -> 'PriorityQueue[Domain]':
+    def __isub__(self, other: 'PriorityQueue[Value]'
+                 ) -> 'PriorityQueue[Value]':
         """
         Subtracts from the queue a given one in-place.
 
@@ -437,7 +432,7 @@ class PriorityQueue(Generic[Domain]):
         self._items = (self - other)._items
         return self
 
-    def isdisjoint(self, other: 'PriorityQueue[Domain]') -> bool:
+    def isdisjoint(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue has no intersection with given one.
 
@@ -456,7 +451,7 @@ class PriorityQueue(Generic[Domain]):
         other_values = other._values
         return all(value not in other_values for value in self._values)
 
-    def add(self, value: Domain) -> None:
+    def add(self, value: Value) -> None:
         """
         Adds value to the queue.
 
@@ -472,7 +467,7 @@ class PriorityQueue(Generic[Domain]):
         """
         heapq.heappush(self._items, self._value_to_item(value))
 
-    def remove(self, value: Domain) -> None:
+    def remove(self, value: Value) -> None:
         """
         Removes value from the queue and if absent raises `KeyError`.
 
@@ -493,7 +488,7 @@ class PriorityQueue(Generic[Domain]):
         else:
             heapq.heapify(self._items)
 
-    def discard(self, value: Domain) -> None:
+    def discard(self, value: Value) -> None:
         """
         Removes value from the queue if present.
 
@@ -512,7 +507,7 @@ class PriorityQueue(Generic[Domain]):
         except KeyError:
             pass
 
-    def peek(self) -> Domain:
+    def peek(self) -> Value:
         """
         Returns front value of the queue.
 
@@ -533,7 +528,7 @@ class PriorityQueue(Generic[Domain]):
         except IndexError:
             raise KeyError
 
-    def pop(self) -> Domain:
+    def pop(self) -> Value:
         """
         Pops front value from the queue.
 
