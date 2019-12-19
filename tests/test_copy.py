@@ -12,6 +12,7 @@ def test_shallow(priority_queue: PriorityQueue) -> None:
 
     assert result is not priority_queue
     assert result == priority_queue
+    assert result._items is priority_queue._items
 
 
 @given(strategies.priority_queues)
@@ -20,3 +21,4 @@ def test_deep(priority_queue: PriorityQueue) -> None:
 
     assert result is not priority_queue
     assert result == priority_queue
+    assert result._items is not priority_queue._items
