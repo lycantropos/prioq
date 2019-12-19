@@ -279,6 +279,25 @@ class PriorityQueue(Generic[Domain]):
             return NotImplemented
         return len(self) < len(other) and self <= other and self != other
 
+    def isdisjoint(self, other: 'PriorityQueue[Domain]') -> bool:
+        """
+        Checks if the queue has no intersection with given one.
+
+        Complexity: O(len(self) * len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue.isdisjoint(PriorityQueue(*range(10)))
+        False
+        >>> queue.isdisjoint(PriorityQueue(*range(10), reverse=True))
+        False
+        >>> queue.isdisjoint(PriorityQueue(*range(20)))
+        False
+        >>> queue.isdisjoint(PriorityQueue(*range(5)))
+        False
+        """
+        other_values = other._values
+        return all(value not in other_values for value in self._values)
+
     def add(self, value: Domain) -> None:
         """
         Adds value to the queue.
