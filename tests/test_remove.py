@@ -5,13 +5,13 @@ import pytest
 from hypothesis import given
 
 from prioq.base import PriorityQueue
-from prioq.hints import Domain
+from prioq.hints import Value
 from tests import strategies
 
 
 @given(strategies.empty_priority_queues_with_values)
-def test_base_case(
-        priority_queue_with_value: Tuple[PriorityQueue, Domain]) -> None:
+def test_base_case(priority_queue_with_value: Tuple[PriorityQueue, Value]
+                   ) -> None:
     priority_queue, value = priority_queue_with_value
 
     with pytest.raises(KeyError):
@@ -19,7 +19,7 @@ def test_base_case(
 
 
 @given(strategies.non_empty_priority_queues_with_their_values)
-def test_step(priority_queue_with_value: Tuple[PriorityQueue, Domain]) -> None:
+def test_step(priority_queue_with_value: Tuple[PriorityQueue, Value]) -> None:
     priority_queue, value = priority_queue_with_value
     original = deepcopy(priority_queue)
 

@@ -4,21 +4,21 @@ from typing import Tuple
 
 from reprit.base import generate_repr
 
-from prioq.hints import (Domain,
-                         Range)
+from prioq.hints import (Key,
+                         Value)
 
 
 class Reverser(ABC):
     @property
     @abstractmethod
-    def item(self) -> Domain:
+    def item(self) -> Value:
         """
         Returns underlying item.
         """
 
     @property
     @abstractmethod
-    def value(self) -> Domain:
+    def value(self) -> Value:
         """
         Returns associated value.
         """
@@ -33,13 +33,13 @@ class Reverser(ABC):
 class SimpleReverser(Reverser):
     __slots__ = ('_item',)
 
-    def __init__(self, item: Domain) -> None:
+    def __init__(self, item: Value) -> None:
         self._item = item
 
     __repr__ = generate_repr(__init__)
 
     @property
-    def item(self) -> Domain:
+    def item(self) -> Value:
         """
         >>> reverser = SimpleReverser(0)
         >>> reverser.item
@@ -48,7 +48,7 @@ class SimpleReverser(Reverser):
         return self._item
 
     @property
-    def value(self) -> Domain:
+    def value(self) -> Value:
         """
         >>> reverser = SimpleReverser(0)
         >>> reverser.value
@@ -70,13 +70,13 @@ class SimpleReverser(Reverser):
 class ComplexReverser(Reverser):
     __slots__ = ('_item',)
 
-    def __init__(self, item: Tuple[Range, Domain]) -> None:
+    def __init__(self, item: Tuple[Key, Value]) -> None:
         self._item = item
 
     __repr__ = generate_repr(__init__)
 
     @property
-    def value(self) -> Domain:
+    def value(self) -> Value:
         """
         >>> reverser = ComplexReverser((0, 1))
         >>> reverser.value
@@ -85,7 +85,7 @@ class ComplexReverser(Reverser):
         return self._item[1]
 
     @property
-    def item(self) -> Domain:
+    def item(self) -> Value:
         """
         >>> reverser = ComplexReverser((0, 1))
         >>> reverser.item

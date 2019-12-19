@@ -8,14 +8,14 @@ from typing import (Any,
 from hypothesis.strategies import SearchStrategy
 
 from prioq.base import PriorityQueue
-from prioq.hints import (Domain,
-                         Key)
+from prioq.hints import (SortingKey,
+                         Value)
 
 Strategy = SearchStrategy
-ValuesListWithKey = Tuple[List[Domain], Optional[Key]]
-ValuesListsPairWithKey = Tuple[List[Domain], List[Domain], Optional[Key]]
-ValuesListsTripletWithKey = Tuple[List[Domain], List[Domain], List[Domain],
-                                  Optional[Key]]
+ValuesListWithKey = Tuple[List[Value], Optional[SortingKey]]
+ValuesListsPairWithKey = Tuple[List[Value], List[Value], Optional[SortingKey]]
+ValuesListsTripletWithKey = Tuple[List[Value], List[Value], List[Value],
+                                  Optional[SortingKey]]
 PriorityQueuesPair = Tuple[PriorityQueue, PriorityQueue]
 PriorityQueuesTriplet = Tuple[PriorityQueue, PriorityQueue, PriorityQueue]
 
@@ -32,5 +32,5 @@ def capacity(iterable: Iterable[Any]) -> int:
     return sum(1 for _ in iterable)
 
 
-def pickle_round_trip(object_: Domain) -> Domain:
+def pickle_round_trip(object_: Value) -> Value:
     return pickle.loads(pickle.dumps(object_))
