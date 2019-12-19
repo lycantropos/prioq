@@ -12,7 +12,7 @@ def test_basic(priority_queue_with_value: Tuple[PriorityQueue, Value]
                ) -> None:
     priority_queue, value = priority_queue_with_value
 
-    result = priority_queue.add(value)
+    result = priority_queue.push(value)
 
     assert result is None
 
@@ -22,7 +22,7 @@ def test_properties(priority_queue_with_value: Tuple[PriorityQueue, Value]
                     ) -> None:
     priority_queue, value = priority_queue_with_value
 
-    priority_queue.add(value)
+    priority_queue.push(value)
 
     assert value in priority_queue
     assert len(priority_queue) > 0

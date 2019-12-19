@@ -81,7 +81,7 @@ Usage
 0
 >>> list(queue)
 [1, 2, 3, 4, 5, 6, 7, 8, 9]
->>> queue.add(100)
+>>> queue.push(100)
 >>> list(queue)
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 100]
 
