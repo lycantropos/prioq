@@ -92,6 +92,11 @@ class PriorityQueue(Generic[Domain]):
             Returns a shallow copy of the queue.
 
             Complexity: O(1).
+
+            >>> queue = PriorityQueue(*range(10))
+            >>> from copy import copy
+            >>> copy(queue) == queue
+            True
             """
             result = PriorityQueue(key=self._key,
                                    reverse=self._reverse)
