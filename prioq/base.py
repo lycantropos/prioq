@@ -225,25 +225,6 @@ class PriorityQueue(Generic[Value]):
         else:
             heapq.heapify(self._items)
 
-    def discard(self, value: Value) -> None:
-        """
-        Removes value from the queue if present.
-
-        Complexity: O(len(self)).
-
-        >>> queue = PriorityQueue(*range(10))
-        >>> queue.discard(-1)
-        >>> list(queue)
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        >>> queue.discard(0)
-        >>> list(queue)
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        """
-        try:
-            self.remove(value)
-        except KeyError:
-            pass
-
     def peek(self) -> Value:
         """
         Returns front value of the queue.

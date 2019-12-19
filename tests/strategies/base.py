@@ -50,9 +50,6 @@ non_empty_values_lists_with_keys = (values_with_keys_strategies
 single_values_with_keys = (values_with_keys_strategies
                            .flatmap(partial(to_values_lists_with_keys,
                                             sizes=[(1, 1)])))
-two_or_more_values_with_keys = (values_with_keys_strategies
-                                .flatmap(partial(to_values_lists_with_keys,
-                                                 sizes=[(2, None)])))
 priority_queues = strategies.builds(to_priority_queue,
                                     values_lists_with_keys, booleans)
 empty_priority_queues = strategies.builds(to_priority_queue,
@@ -66,8 +63,6 @@ priority_queues_with_values = strategies.builds(
         booleans)
 empty_priority_queues_with_values = strategies.builds(
         to_priority_queue_with_value, single_values_with_keys, booleans)
-non_empty_priority_queues_with_values = strategies.builds(
-        to_priority_queue_with_value, two_or_more_values_with_keys, booleans)
 non_empty_priority_queues_with_their_values = (
     non_empty_priority_queues.flatmap(to_priority_queues_with_their_values))
 
