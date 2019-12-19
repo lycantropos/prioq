@@ -2,6 +2,7 @@ from hypothesis import given
 
 from prioq.base import PriorityQueue
 from tests.utils import (PriorityQueuesPair,
+                         PriorityQueuesTriplet,
                          implication)
 from . import strategies
 
@@ -59,6 +60,15 @@ def test_absorption_identity(priority_queues_pair: PriorityQueuesPair) -> None:
     result = first_queue & (first_queue | second_queue)
 
     assert result == first_queue
+
+
+@given(strategies.priority_queues_triplets)
+def test_associativity(priority_queues_triplet: PriorityQueuesTriplet) -> None:
+    first_queue, mid_priority_queue, second_queue = priority_queues_triplet
+
+    result = (first_queue & mid_priority_queue) & second_queue
+
+    assert result == first_queue & (mid_priority_queue & second_queue)
 
 
 @given(strategies.priority_queues_pairs)
