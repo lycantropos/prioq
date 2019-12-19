@@ -167,6 +167,20 @@ class PriorityQueue(Generic[Domain]):
                            key=self._key,
                            reverse=self._reverse))
 
+    def __reversed__(self) -> Iterator[Domain]:
+        """
+        Iterates over the queue in reversed order.
+
+        Complexity: O(len(self) * log len(self)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> list(reversed(queue))
+        [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+        """
+        return iter(sorted(self._values,
+                           key=self._key,
+                           reverse=not self._reverse))
+
     def add(self, value: Domain) -> None:
         """
         Adds value to the queue.
