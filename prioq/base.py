@@ -14,7 +14,6 @@ from reprit.base import generate_repr
 
 from .hints import (Domain,
                     Key,
-                    OtherDomain,
                     Range)
 from .reversing import (ComplexReverser,
                         SimpleReverser)
@@ -125,28 +124,6 @@ class PriorityQueue(Generic[Domain]):
         """
         return value in self._values
 
-    def __eq__(self, other: 'PriorityQueue[OtherDomain]') -> bool:
-        """
-        Checks if the queue is equal to the given one.
-
-        Complexity: O(len(self) * log len(self)).
-
-        >>> queue = PriorityQueue(*range(10))
-        >>> queue == PriorityQueue(*range(10))
-        True
-        >>> queue == PriorityQueue(*range(10), reverse=True)
-        True
-        >>> queue == PriorityQueue(*range(20))
-        False
-        >>> queue == PriorityQueue(*range(5))
-        False
-        """
-        return (len(self) == len(other)
-                and all(value == other_value
-                        for value, other_value in zip(self, other))
-                if isinstance(other, PriorityQueue)
-                else NotImplemented)
-
     def __len__(self) -> int:
         """
         Returns number of elements in the queue.
@@ -185,6 +162,118 @@ class PriorityQueue(Generic[Domain]):
         return iter(sorted(self._values,
                            key=self._key,
                            reverse=not self._reverse))
+
+    def __eq__(self, other: 'PriorityQueue[Domain]') -> bool:
+        """
+        Checks if the queue is equal to the given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue == PriorityQueue(*range(10))
+        True
+        >>> queue == PriorityQueue(*range(10), reverse=True)
+        False
+        >>> queue == PriorityQueue(*range(20))
+        False
+        >>> queue == PriorityQueue(*range(5))
+        False
+        """
+        return (self is other or self <= other <= self
+                if isinstance(other, PriorityQueue)
+                else NotImplemented)
+
+    def __ge__(self, other: 'PriorityQueue[Domain]') -> bool:
+        """
+        Checks if the queue is a superset of given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue >= PriorityQueue(*range(10))
+        True
+        >>> queue >= PriorityQueue(*range(10), reverse=True)
+        False
+        >>> queue >= PriorityQueue(*range(20))
+        False
+        >>> queue >= PriorityQueue(*range(5))
+        True
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        if self is other:
+            return True
+        elif len(self) < len(other):
+            return False
+        else:
+            values, other_values = iter(self), iter(other)
+            return all(value in values for value in other_values)
+
+    def __gt__(self, other: 'PriorityQueue[Domain]') -> bool:
+        """
+        Checks if the queue is a strict superset of given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue > PriorityQueue(*range(10))
+        False
+        >>> queue > PriorityQueue(*range(10), reverse=True)
+        False
+        >>> queue > PriorityQueue(*range(20))
+        False
+        >>> queue > PriorityQueue(*range(5))
+        True
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        return len(self) > len(other) and self >= other and self != other
+
+    def __le__(self, other: 'PriorityQueue[Domain]') -> bool:
+        """
+        Checks if the queue is a subset of given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue <= PriorityQueue(*range(10))
+        True
+        >>> queue <= PriorityQueue(*range(10), reverse=True)
+        False
+        >>> queue <= PriorityQueue(*range(20))
+        True
+        >>> queue <= PriorityQueue(*range(5))
+        False
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        if self is other:
+            return True
+        elif len(self) > len(other):
+            return False
+        else:
+            values, other_values = iter(self), iter(other)
+            return all(value in other_values for value in values)
+
+    def __lt__(self, other: 'PriorityQueue[Domain]') -> bool:
+        """
+        Checks if the queue is a strict subset of given one.
+
+        Complexity: O(len(self) * log len(self) + len(other) * log len(other)).
+
+        >>> queue = PriorityQueue(*range(10))
+        >>> queue < PriorityQueue(*range(10))
+        False
+        >>> queue < PriorityQueue(*range(10), reverse=True)
+        False
+        >>> queue < PriorityQueue(*range(20))
+        True
+        >>> queue < PriorityQueue(*range(5))
+        False
+        """
+        if not isinstance(other, PriorityQueue):
+            return NotImplemented
+        return len(self) < len(other) and self <= other and self != other
 
     def add(self, value: Domain) -> None:
         """
