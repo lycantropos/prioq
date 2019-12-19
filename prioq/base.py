@@ -383,7 +383,12 @@ class PriorityQueue(Generic[Value]):
         """
         if not isinstance(other, PriorityQueue):
             return NotImplemented
-        return (self - other) | (other - self)
+        if not self:
+            return other
+        elif not other:
+            return self
+        else:
+            return (self - other) | (other - self)
 
     def __iand__(self, other: 'PriorityQueue[Value]'
                  ) -> 'PriorityQueue[Value]':
