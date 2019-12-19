@@ -85,7 +85,7 @@ class PriorityQueue(Generic[Domain]):
 
     __repr__ = generate_repr(__init__)
 
-    if sys.version_info < (3, 6):
+    if sys.version_info < (3, 6, 4):
         # caused by https://github.com/python/typing/issues/498
         def __copy__(self) -> 'PriorityQueue[Domain]':
             """
