@@ -1,8 +1,8 @@
 from hypothesis import given
 
 from prioq.base import PriorityQueue
-from tests.utils import capacity
 from tests import strategies
+from tests.utils import capacity
 
 
 @given(strategies.priority_queues)
