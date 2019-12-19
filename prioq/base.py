@@ -129,15 +129,21 @@ class PriorityQueue(Generic[Domain]):
         """
         Checks if the queue is equal to the given one.
 
-        Complexity: O(min(len(self), len(other))).
+        Complexity: O(len(self) * log len(self)).
 
         >>> queue = PriorityQueue(*range(10))
         >>> queue == PriorityQueue(*range(10))
         True
         >>> queue == PriorityQueue(*range(10), reverse=True)
+        True
+        >>> queue == PriorityQueue(*range(20))
+        False
+        >>> queue == PriorityQueue(*range(5))
         False
         """
-        return (self._items == other._items
+        return (len(self) == len(other)
+                and all(value == other_value
+                        for value, other_value in zip(self, other))
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
