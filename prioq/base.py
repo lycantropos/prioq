@@ -169,9 +169,8 @@ class PriorityQueue(Generic[Domain]):
         >>> list(queue)
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         """
-        return iter(sorted(self._values,
-                           key=self._key,
-                           reverse=self._reverse))
+        self._items = sorted(self._items)
+        return iter(self._values)
 
     def __reversed__(self) -> Iterator[Domain]:
         """
