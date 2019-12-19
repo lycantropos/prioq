@@ -48,7 +48,7 @@ class PriorityQueue(abc.MutableSet):
         """
         Initializes queue.
 
-        Complexity: O(log n).
+        Complexity: O(log len(values)).
 
         :param values: initial values
         :param key: function of one argument to calculate priority.
@@ -98,7 +98,7 @@ class PriorityQueue(abc.MutableSet):
         """
         Checks if value is present in the queue.
 
-        Complexity: O(n).
+        Complexity: O(len(self)).
 
         >>> queue = PriorityQueue(*range(10))
         >>> 0 in queue
@@ -112,7 +112,7 @@ class PriorityQueue(abc.MutableSet):
         """
         Checks if the queue is equal to the given one.
 
-        Complexity: O(min(n, m)).
+        Complexity: O(min(len(self), len(other))).
 
         >>> queue = PriorityQueue(*range(10))
         >>> queue == PriorityQueue(*range(10))
@@ -140,7 +140,7 @@ class PriorityQueue(abc.MutableSet):
         """
         Iterates over the queue in sorted order.
 
-        Complexity: O(n * log n).
+        Complexity: O(len(self) * log len(self)).
 
         >>> queue = PriorityQueue(*range(10))
         >>> list(queue)
@@ -154,7 +154,7 @@ class PriorityQueue(abc.MutableSet):
         """
         Adds value to the queue.
 
-        Complexity: O(log n).
+        Complexity: O(log len(self)).
 
         >>> queue = PriorityQueue(*range(10))
         >>> queue.add(-1)
@@ -170,7 +170,7 @@ class PriorityQueue(abc.MutableSet):
         """
         Removes value from the queue if present.
 
-        Complexity: O(n).
+        Complexity: O(len(self)).
 
         >>> queue = PriorityQueue(*range(10))
         >>> queue.discard(-1)
