@@ -60,6 +60,8 @@ class PriorityQueue(Generic[Value]):
         >>> from prioq.base import PriorityQueue
         >>> values = range(-5, 5)
         >>> queue = PriorityQueue(*values, key=abs, reverse=True)
+        >>> len(queue) == len(values)
+        True
         >>> queue.key is abs
         True
         >>> queue.reverse
