@@ -61,8 +61,6 @@ class PriorityQueue(Generic[Value]):
         >>> from prioq.base import PriorityQueue
         >>> values = range(-5, 6)
         >>> queue = PriorityQueue(*values, key=abs, reverse=True)
-        >>> all(value in queue for value in values)
-        True
         >>> queue.key is abs
         True
         >>> queue.reverse
@@ -112,20 +110,6 @@ class PriorityQueue(Generic[Value]):
     @property
     def key(self) -> Optional[SortingKey]:
         return self._key
-
-    def __contains__(self, value: Value) -> bool:
-        """
-        Checks if value is present in the queue.
-
-        Complexity: O(len(self)).
-
-        >>> queue = PriorityQueue(*range(10))
-        >>> 0 in queue
-        True
-        >>> -1 in queue
-        False
-        """
-        return value in self._values
 
     def __len__(self) -> int:
         """
