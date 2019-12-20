@@ -4,7 +4,6 @@ from functools import partial
 from operator import (attrgetter,
                       itemgetter)
 from typing import (Generic,
-                    Iterator,
                     Optional,
                     Sequence,
                     Tuple)
@@ -59,7 +58,7 @@ class PriorityQueue(Generic[Value]):
             (from highest priority to lowest).
 
         >>> from prioq.base import PriorityQueue
-        >>> values = range(-5, 6)
+        >>> values = range(-5, 5)
         >>> queue = PriorityQueue(*values, key=abs, reverse=True)
         >>> queue.key is abs
         True
@@ -89,7 +88,7 @@ class PriorityQueue(Generic[Value]):
 
             Complexity: O(1).
 
-            >>> queue = PriorityQueue(*range(10))
+            >>> queue = PriorityQueue(*range(5))
             >>> from copy import copy
             >>> copy(queue) == queue
             True
@@ -117,24 +116,11 @@ class PriorityQueue(Generic[Value]):
 
         Complexity: O(1).
 
-        >>> queue = PriorityQueue(*range(10))
+        >>> queue = PriorityQueue(*range(5))
         >>> len(queue)
-        10
+        5
         """
         return len(self._items)
-
-    def __iter__(self) -> Iterator[Value]:
-        """
-        Iterates over the queue in sorted order.
-
-        Complexity: O(len(self) * log len(self)).
-
-        >>> queue = PriorityQueue(*range(10))
-        >>> list(queue)
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        """
-        self._items = sorted(self._items)
-        return iter(self._values)
 
     def __eq__(self, other: 'PriorityQueue[Value]') -> bool:
         """
@@ -153,7 +139,8 @@ class PriorityQueue(Generic[Value]):
         False
         """
         return (self is other
-                or sorted(self._items) == sorted(other._items)
+                or len(self) == len(other)
+                and self._values == other._values
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
@@ -163,13 +150,13 @@ class PriorityQueue(Generic[Value]):
 
         Complexity: O(log len(self)).
 
-        >>> queue = PriorityQueue(*range(10))
+        >>> queue = PriorityQueue(*range(5))
         >>> queue.push(-1)
-        >>> list(queue)
-        [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        >>> queue.push(0)
-        >>> list(queue)
-        [-1, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue
+        PriorityQueue(-1, 0, 1, 2, 3, 4, key=None, reverse=False)
+        >>> queue.push(10)
+        >>> queue
+        PriorityQueue(-1, 0, 1, 2, 3, 4, 10, key=None, reverse=False)
         """
         heapq.heappush(self._items, self._value_to_item(value))
 
@@ -179,13 +166,13 @@ class PriorityQueue(Generic[Value]):
 
         Complexity: O(len(self)).
 
-        >>> queue = PriorityQueue(*range(10))
+        >>> queue = PriorityQueue(*range(5))
         >>> queue.remove(0)
-        >>> list(queue)
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        >>> queue.remove(9)
-        >>> list(queue)
-        [1, 2, 3, 4, 5, 6, 7, 8]
+        >>> queue
+        PriorityQueue(1, 2, 3, 4, key=None, reverse=False)
+        >>> queue.remove(4)
+        >>> queue
+        PriorityQueue(1, 2, 3, key=None, reverse=False)
         """
         try:
             self._items.remove(self._value_to_item(value))
@@ -200,7 +187,7 @@ class PriorityQueue(Generic[Value]):
 
         Complexity: O(1).
 
-        >>> queue = PriorityQueue(*range(10))
+        >>> queue = PriorityQueue(*range(5))
         >>> queue.peek()
         0
         >>> queue.push(-1)
@@ -221,15 +208,15 @@ class PriorityQueue(Generic[Value]):
 
         Complexity: O(1).
 
-        >>> queue = PriorityQueue(*range(10))
+        >>> queue = PriorityQueue(*range(5))
         >>> queue.pop()
         0
-        >>> list(queue)
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue
+        PriorityQueue(1, 2, 3, 4, key=None, reverse=False)
         >>> queue.pop()
         1
-        >>> list(queue)
-        [2, 3, 4, 5, 6, 7, 8, 9]
+        >>> queue
+        PriorityQueue(2, 3, 4, key=None, reverse=False)
         """
         return self._item_to_value(heapq.heappop(self._items))
 
@@ -239,9 +226,9 @@ class PriorityQueue(Generic[Value]):
 
         Complexity: O(1).
 
-        >>> queue = PriorityQueue(*range(10))
+        >>> queue = PriorityQueue(*range(5))
         >>> queue.clear()
-        >>> list(queue)
-        []
+        >>> queue
+        PriorityQueue(key=None, reverse=False)
         """
         self._items.clear()
