@@ -152,19 +152,6 @@ class PriorityQueue(Generic[Value]):
         self._items = sorted(self._items)
         return iter(self._values)
 
-    def __reversed__(self) -> Iterator[Value]:
-        """
-        Iterates over the queue in reversed order.
-
-        Complexity: O(len(self) * log len(self)).
-
-        >>> queue = PriorityQueue(*range(10))
-        >>> list(reversed(queue))
-        [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-        """
-        self._items = sorted(self._items)
-        return iter(self._values[::-1])
-
     def __eq__(self, other: 'PriorityQueue[Value]') -> bool:
         """
         Checks if the queue is equal to the given one.
