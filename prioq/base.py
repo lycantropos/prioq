@@ -101,7 +101,7 @@ class PriorityQueue(Generic[Value]):
 
     @property
     def _values(self) -> Sequence[Value]:
-        return [self._item_to_value(item) for item in self._items]
+        return [self._item_to_value(item) for item in sorted(self._items)]
 
     @property
     def reverse(self) -> bool:
