@@ -20,6 +20,6 @@ def test_basic(values_with_key: Tuple[List[Value], Optional[SortingKey]],
                            reverse=reverse)
 
     assert len(result) == len(values)
-    assert all(value in result for value in values)
+    assert all(value in result._values for value in values)
     assert result.key is key
     assert result.reverse is reverse

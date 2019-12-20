@@ -24,5 +24,5 @@ def test_properties(priority_queue_with_value: Tuple[PriorityQueue, Value]
 
     priority_queue.push(value)
 
-    assert value in priority_queue
+    assert value in priority_queue._values
     assert len(priority_queue) > 0
