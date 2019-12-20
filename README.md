@@ -88,6 +88,7 @@ Usage
 10
 >>> queue.peek()
 0
+
 ```
 
 Development
