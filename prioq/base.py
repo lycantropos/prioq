@@ -247,10 +247,7 @@ class PriorityQueue(Generic[Value]):
         >>> list(queue)
         [2, 3, 4, 5, 6, 7, 8, 9]
         """
-        try:
-            return self._item_to_value(heapq.heappop(self._items))
-        except IndexError:
-            raise KeyError
+        return self._item_to_value(heapq.heappop(self._items))
 
     def clear(self) -> None:
         """
