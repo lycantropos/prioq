@@ -206,7 +206,7 @@ class PriorityQueue(Generic[Value]):
 
     def remove(self, value: Value) -> None:
         """
-        Removes value from the queue and if absent raises `KeyError`.
+        Removes value from the queue and if absent raises `ValueError`.
 
         Complexity: O(len(self)).
 
@@ -221,7 +221,7 @@ class PriorityQueue(Generic[Value]):
         try:
             self._items.remove(self._value_to_item(value))
         except ValueError:
-            raise KeyError(value)
+            raise ValueError(value)
         else:
             heapq.heapify(self._items)
 

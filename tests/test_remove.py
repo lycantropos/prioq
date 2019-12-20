@@ -14,7 +14,7 @@ def test_base_case(priority_queue_with_value: Tuple[PriorityQueue, Value]
                    ) -> None:
     priority_queue, value = priority_queue_with_value
 
-    with pytest.raises(KeyError):
+    with pytest.raises(ValueError):
         priority_queue.remove(value)
 
 
