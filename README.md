@@ -73,18 +73,21 @@ Usage
 ```python
 >>> from prioq.base import PriorityQueue
 >>> queue = PriorityQueue(*range(10))
->>> list(queue)
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> len(queue)
+10
 >>> queue.peek()
 0
 >>> queue.pop()
 0
->>> list(queue)
-[1, 2, 3, 4, 5, 6, 7, 8, 9]
->>> queue.push(100)
->>> list(queue)
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 100]
-
+>>> len(queue)
+9
+>>> queue.peek()
+1
+>>> queue.push(0)
+>>> len(queue)
+10
+>>> queue.peek()
+0
 ```
 
 Development
