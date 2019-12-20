@@ -9,7 +9,7 @@ from tests import strategies
 
 @given(strategies.empty_priority_queues)
 def test_base_case(priority_queue: PriorityQueue) -> None:
-    with pytest.raises(KeyError):
+    with pytest.raises(IndexError):
         priority_queue.pop()
 
 
