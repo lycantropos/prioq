@@ -169,9 +169,7 @@ class PriorityQueue(Generic[Value]):
         False
         """
         return (self is other
-                or len(self) == len(other)
-                and all(value == other_value
-                        for value, other_value in zip(self, other))
+                or sorted(self._items) == sorted(other._items)
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
