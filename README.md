@@ -2,7 +2,7 @@ prioq
 =====
 
 [![](https://travis-ci.com/lycantropos/prioq.svg?branch=master)](https://travis-ci.com/lycantropos/prioq "Travis CI")
-[![](https://dev.azure.com/lycantropos/prioq/_apis/build/status/lycantropos.prioq?branchName=master)](https://dev.azure.com/lycantropos/prioq/_build/latest?branchName=master "Azure Pipelines")
+[![](https://dev.azure.com/lycantropos/prioq/_apis/build/status/lycantropos.prioq?branchName=master)](https://dev.azure.com/lycantropos/prioq/_build/latest?definitionId=16&branchName=master "Azure Pipelines")
 [![](https://readthedocs.org/projects/prioq/badge/?version=latest)](https://prioq.readthedocs.io/en/latest/?badge=latest "Documentation")
 [![](https://codecov.io/gh/lycantropos/prioq/branch/master/graph/badge.svg)](https://codecov.io/gh/lycantropos/prioq "Codecov")
 [![](https://img.shields.io/github/license/lycantropos/prioq.svg)](https://github.com/lycantropos/prioq/blob/master/LICENSE "License")
