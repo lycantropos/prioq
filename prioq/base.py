@@ -71,11 +71,13 @@ class PriorityQueue(Generic[Value]):
         self._reverse = reverse
         self._value_to_item = (reverse_key(key)
                                if reverse
-                               else (identity if key is None
+                               else (identity
+                                     if key is None
                                      else partial(_to_item, key)))
         self._item_to_value = (attrgetter('value')
                                if reverse
-                               else (identity if key is None
+                               else (identity
+                                     if key is None
                                      else itemgetter(1)))
         self._items = [self._value_to_item(value) for value in _values]
         heapq.heapify(self._items)
