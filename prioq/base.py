@@ -204,7 +204,7 @@ class PriorityQueue(Generic[Value]):
         try:
             return self._item_to_value(self._items[0])
         except IndexError:
-            raise KeyError
+            raise ValueError('Priority queue is empty')
 
     def pop(self) -> Value:
         """
