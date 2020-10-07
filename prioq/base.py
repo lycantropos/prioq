@@ -181,7 +181,8 @@ class PriorityQueue(Generic[Value]):
         try:
             self._items.remove(self._value_to_item(value))
         except ValueError:
-            raise ValueError('{!r} is not in priority queue'.format(value))
+            raise ValueError('{!r} is not in priority queue'
+                             .format(value)) from None
         else:
             heapq.heapify(self._items)
 
