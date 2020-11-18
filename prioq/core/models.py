@@ -26,49 +26,47 @@ class Item(ABC):
 
 
 class ComplexItem(Item):
-    __slots__ = 'pair',
+    __slots__ = '_pair',
 
     def __init__(self, pair: Tuple[Key, Value]) -> None:
-        self.pair = pair
+        self._pair = pair
 
     __repr__ = generate_repr(__init__)
 
     def __lt__(self, other: 'ComplexItem') -> bool:
-        return (self.pair[0] < other.pair[0]
+        return (self._pair[0] < other._pair[0]
                 if isinstance(other, ComplexItem)
                 else NotImplemented)
 
     @property
+    def pair(self) -> Tuple[Key, Value]:
+        return self._pair
+
+    @property
     def value(self) -> Value:
-        """
-        >>> item = ComplexItem((0, 1))
-        >>> item.value
-        1
-        """
-        return self.pair[1]
+        return self._pair[1]
 
 
 class ComplexReversedItem(Item):
-    __slots__ = 'pair',
+    __slots__ = '_pair',
 
     def __init__(self, pair: Tuple[Key, Value]) -> None:
-        self.pair = pair
+        self._pair = pair
 
     __repr__ = generate_repr(__init__)
 
     def __lt__(self, other: 'ComplexReversedItem') -> bool:
-        return (self.pair[0] > other.pair[0]
+        return (self._pair[0] > other._pair[0]
                 if isinstance(other, ComplexReversedItem)
                 else NotImplemented)
 
     @property
+    def pair(self) -> Tuple[Key, Value]:
+        return self._pair
+
+    @property
     def value(self) -> Value:
-        """
-        >>> item = ComplexReversedItem((0, 1))
-        >>> item.value
-        1
-        """
-        return self.pair[1]
+        return self._pair[1]
 
 
 class SimpleItem(Item):
