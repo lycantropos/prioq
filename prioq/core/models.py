@@ -89,7 +89,7 @@ class SimpleItem(Item):
         return self._value
 
     def __lt__(self, other: 'SimpleItem') -> bool:
-        return (self._value > other._value
+        return (self._value < other._value
                 if isinstance(other, SimpleItem)
                 else NotImplemented)
 
