@@ -99,11 +99,6 @@ class SimpleItem(Item):
 
     @property
     def value(self) -> Value:
-        """
-        >>> item = SimpleItem(0)
-        >>> item.value
-        0
-        """
         return self._value
 
 
@@ -127,9 +122,4 @@ class SimpleReversedItem(Item):
 
     @property
     def value(self) -> Value:
-        """
-        >>> item = SimpleReversedItem(0)
-        >>> item.value
-        0
-        """
         return self._value
