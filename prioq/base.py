@@ -223,7 +223,7 @@ class PriorityQueue(Generic[Value]):
 
         >>> queue = PriorityQueue(*range(5))
         >>> queue.values()
-        [1, 2, 3, 4, 5]
+        [0, 1, 2, 3, 4]
         """
         return [item.value for item in sorted(self._items)]
 
