@@ -82,4 +82,4 @@ def to_priority_queues_with_their_values(queue: PriorityQueue
                                          ) -> Strategy[Tuple[PriorityQueue,
                                                              Value]]:
     return strategies.tuples(strategies.just(queue),
-                             strategies.sampled_from(queue._values))
+                             strategies.sampled_from(queue.values()))

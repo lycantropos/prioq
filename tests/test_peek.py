@@ -15,6 +15,6 @@ def test_base_case(priority_queue: PriorityQueue) -> None:
 def test_step(priority_queue: PriorityQueue) -> None:
     result = priority_queue.peek()
 
-    assert result in priority_queue._values
+    assert result in priority_queue.values()
     assert all(not item < priority_queue._item_factory(result)
                for item in priority_queue._items)
