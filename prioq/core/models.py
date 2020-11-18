@@ -33,6 +33,11 @@ class ComplexItem(Item):
 
     __repr__ = generate_repr(__init__)
 
+    def __eq__(self, other: 'ComplexItem') -> bool:
+        return (self._pair == other._pair
+                if isinstance(other, ComplexItem)
+                else NotImplemented)
+
     def __lt__(self, other: 'ComplexItem') -> bool:
         return (self._pair[0] < other._pair[0]
                 if isinstance(other, ComplexItem)
@@ -54,6 +59,11 @@ class ComplexReversedItem(Item):
         self._pair = pair
 
     __repr__ = generate_repr(__init__)
+
+    def __eq__(self, other: 'ComplexReversedItem') -> bool:
+        return (self._pair == other._pair
+                if isinstance(other, ComplexReversedItem)
+                else NotImplemented)
 
     def __lt__(self, other: 'ComplexReversedItem') -> bool:
         return (self._pair[0] > other._pair[0]
@@ -77,6 +87,11 @@ class SimpleItem(Item):
 
     __repr__ = generate_repr(__init__)
 
+    def __eq__(self, other: 'SimpleItem') -> bool:
+        return (self._value == other._value
+                if isinstance(other, SimpleItem)
+                else NotImplemented)
+
     def __lt__(self, other: 'SimpleItem') -> bool:
         return (self._value < other._value
                 if isinstance(other, SimpleItem)
@@ -99,6 +114,11 @@ class SimpleReversedItem(Item):
         self._value = value
 
     __repr__ = generate_repr(__init__)
+
+    def __eq__(self, other: 'SimpleReversedItem') -> bool:
+        return (self._value == other._value
+                if isinstance(other, SimpleReversedItem)
+                else NotImplemented)
 
     def __lt__(self, other: 'SimpleReversedItem') -> bool:
         return (self._value > other._value
