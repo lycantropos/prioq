@@ -19,6 +19,6 @@ def test_step(priority_queue: PriorityQueue) -> None:
 
     result = priority_queue.pop()
 
-    assert all(not item < priority_queue._value_to_item(result)
+    assert all(not item < priority_queue._item_factory(result)
                for item in priority_queue._items)
     assert len(priority_queue) == len(original) - 1
