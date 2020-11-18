@@ -11,17 +11,17 @@ from prioq.hints import (Key,
 class Item(ABC):
     __slots__ = ()
 
+    @abstractmethod
+    def __lt__(self, other: 'Item') -> bool:
+        """
+        Checks if the object is lower than the other.
+        """
+
     @property
     @abstractmethod
     def value(self) -> Value:
         """
         Returns associated value.
-        """
-
-    @abstractmethod
-    def __lt__(self, other: 'Item') -> bool:
-        """
-        Checks if the object is lower than the other.
         """
 
 
@@ -33,6 +33,11 @@ class ComplexItem(Item):
 
     __repr__ = generate_repr(__init__)
 
+    def __lt__(self, other: 'ComplexItem') -> bool:
+        return (self.pair[0] < other.pair[0]
+                if isinstance(other, ComplexItem)
+                else NotImplemented)
+
     @property
     def value(self) -> Value:
         """
@@ -41,11 +46,6 @@ class ComplexItem(Item):
         1
         """
         return self.pair[1]
-
-    def __lt__(self, other: 'ComplexItem') -> bool:
-        return (self.pair[0] < other.pair[0]
-                if isinstance(other, ComplexItem)
-                else NotImplemented)
 
 
 class ComplexReversedItem(Item):
@@ -56,6 +56,11 @@ class ComplexReversedItem(Item):
 
     __repr__ = generate_repr(__init__)
 
+    def __lt__(self, other: 'ComplexReversedItem') -> bool:
+        return (self.pair[0] > other.pair[0]
+                if isinstance(other, ComplexReversedItem)
+                else NotImplemented)
+
     @property
     def value(self) -> Value:
         """
@@ -64,11 +69,6 @@ class ComplexReversedItem(Item):
         1
         """
         return self.pair[1]
-
-    def __lt__(self, other: 'ComplexReversedItem') -> bool:
-        return (self.pair[0] > other.pair[0]
-                if isinstance(other, ComplexReversedItem)
-                else NotImplemented)
 
 
 class SimpleItem(Item):
@@ -79,6 +79,11 @@ class SimpleItem(Item):
 
     __repr__ = generate_repr(__init__)
 
+    def __lt__(self, other: 'SimpleItem') -> bool:
+        return (self._value < other._value
+                if isinstance(other, SimpleItem)
+                else NotImplemented)
+
     @property
     def value(self) -> Value:
         """
@@ -87,11 +92,6 @@ class SimpleItem(Item):
         0
         """
         return self._value
-
-    def __lt__(self, other: 'SimpleItem') -> bool:
-        return (self._value < other._value
-                if isinstance(other, SimpleItem)
-                else NotImplemented)
 
 
 class SimpleReversedItem(Item):
@@ -102,6 +102,11 @@ class SimpleReversedItem(Item):
 
     __repr__ = generate_repr(__init__)
 
+    def __lt__(self, other: 'SimpleReversedItem') -> bool:
+        return (self._value > other._value
+                if isinstance(other, SimpleReversedItem)
+                else NotImplemented)
+
     @property
     def value(self) -> Value:
         """
@@ -110,8 +115,3 @@ class SimpleReversedItem(Item):
         0
         """
         return self._value
-
-    def __lt__(self, other: 'SimpleReversedItem') -> bool:
-        return (self._value > other._value
-                if isinstance(other, SimpleReversedItem)
-                else NotImplemented)
