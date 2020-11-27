@@ -1,43 +1,29 @@
 prioq
 =====
 
-[![](https://travis-ci.com/lycantropos/prioq.svg?branch=master)](https://travis-ci.com/lycantropos/prioq "Travis CI")
 [![](https://dev.azure.com/lycantropos/prioq/_apis/build/status/lycantropos.prioq?branchName=master)](https://dev.azure.com/lycantropos/prioq/_build/latest?definitionId=16&branchName=master "Azure Pipelines")
 [![](https://readthedocs.org/projects/prioq/badge/?version=latest)](https://prioq.readthedocs.io/en/latest/?badge=latest "Documentation")
 [![](https://codecov.io/gh/lycantropos/prioq/branch/master/graph/badge.svg)](https://codecov.io/gh/lycantropos/prioq "Codecov")
 [![](https://img.shields.io/github/license/lycantropos/prioq.svg)](https://github.com/lycantropos/prioq/blob/master/LICENSE "License")
 [![](https://badge.fury.io/py/prioq.svg)](https://badge.fury.io/py/prioq "PyPI")
 
-In what follows
-- `python` is an alias for `python3.5` or any later
-version (`python3.6` and so on),
-- `pypy` is an alias for `pypy3.5` or any later
-version (`pypy3.6` and so on).
+In what follows `python` is an alias for `python3.5` or `pypy3.5`
+or any later version (`python3.6`, `pypy3.6` and so on).
 
 Installation
 ------------
 
-Install the latest `pip` & `setuptools` packages versions:
-- with `CPython`
-  ```bash
-  python -m pip install --upgrade pip setuptools
-  ```
-- with `PyPy`
-  ```bash
-  pypy -m pip install --upgrade pip setuptools
-  ```
+Install the latest `pip` & `setuptools` packages versions
+```bash
+python -m pip install --upgrade pip setuptools
+```
 
 ### User
 
 Download and install the latest stable version from `PyPI` repository:
-- with `CPython`
-  ```bash
-  python -m pip install --upgrade prioq
-  ```
-- with `PyPy`
-  ```bash
-  pypy -m pip install --upgrade prioq
-  ```
+```bash
+python -m pip install --upgrade prioq
+```
 
 ### Developer
 
@@ -47,25 +33,15 @@ git clone https://github.com/lycantropos/prioq.git
 cd prioq
 ```
 
-Install dependencies:
-- with `CPython`
-  ```bash
-  python -m pip install --force-reinstall -r requirements.txt
-  ```
-- with `PyPy`
-  ```bash
-  pypy -m pip install --force-reinstall -r requirements.txt
-  ```
+Install dependencies
+```bash
+python -m pip install --force-reinstall -r requirements.txt
+```
 
-Install:
-- with `CPython`
-  ```bash
-  python setup.py install
-  ```
-- with `PyPy`
-  ```bash
-  pypy setup.py install
-  ```
+Install
+```bash
+python setup.py install
+```
 
 Usage
 -----
@@ -137,15 +113,10 @@ This will set version to `major.minor.patch`.
 
 ### Running tests
 
-Install dependencies:
-- with `CPython`
-  ```bash
-  python -m pip install --force-reinstall -r requirements-tests.txt
-  ```
-- with `PyPy`
-  ```bash
-  pypy -m pip install --force-reinstall -r requirements-tests.txt
-  ```
+Install dependencies
+```bash
+python -m pip install --force-reinstall -r requirements-tests.txt
+```
 
 Plain
 ```bash
