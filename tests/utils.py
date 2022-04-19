@@ -32,9 +32,9 @@ def capacity(iterable: Iterable[Any]) -> int:
     return sum(1 for _ in iterable)
 
 
-def pickle_round_trip(object_: Value) -> Value:
-    return pickle.loads(pickle.dumps(object_))
-
-
 def identity(value: Value) -> Value:
     return value
+
+
+def pickle_round_trip(object_: Value) -> Value:
+    return pickle.loads(pickle.dumps(object_))
