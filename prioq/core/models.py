@@ -1,6 +1,5 @@
 from abc import (ABC,
                  abstractmethod)
-from typing import Tuple
 
 from reprit.base import generate_repr
 
@@ -26,57 +25,57 @@ class Item(ABC):
 
 
 class ComplexItem(Item):
-    __slots__ = '_pair',
+    __slots__ = '_key', '_value'
 
-    def __init__(self, pair: Tuple[Key, Value]) -> None:
-        self._pair = pair
-
-    __repr__ = generate_repr(__init__)
-
-    def __eq__(self, other: 'ComplexItem') -> bool:
-        return (self._pair == other._pair
-                if isinstance(other, ComplexItem)
-                else NotImplemented)
-
-    def __lt__(self, other: 'ComplexItem') -> bool:
-        return (self._pair[0] < other._pair[0]
-                if isinstance(other, ComplexItem)
-                else NotImplemented)
-
-    @property
-    def pair(self) -> Tuple[Key, Value]:
-        return self._pair
-
-    @property
-    def value(self) -> Value:
-        return self._pair[1]
-
-
-class ComplexReversedItem(Item):
-    __slots__ = '_pair',
-
-    def __init__(self, pair: Tuple[Key, Value]) -> None:
-        self._pair = pair
+    def __init__(self, key: Key, value: Value) -> None:
+        self._key, self._value = key, value
 
     __repr__ = generate_repr(__init__)
 
     def __eq__(self, other: 'ComplexReversedItem') -> bool:
-        return (self._pair == other._pair
+        return (self.key == other.key and self.value == other.value
                 if isinstance(other, ComplexReversedItem)
                 else NotImplemented)
 
     def __lt__(self, other: 'ComplexReversedItem') -> bool:
-        return (self._pair[0] > other._pair[0]
+        return (self.key < other.key
                 if isinstance(other, ComplexReversedItem)
                 else NotImplemented)
 
     @property
-    def pair(self) -> Tuple[Key, Value]:
-        return self._pair
+    def key(self) -> Key:
+        return self._key
 
     @property
     def value(self) -> Value:
-        return self._pair[1]
+        return self._value
+
+
+class ComplexReversedItem(Item):
+    __slots__ = '_key', '_value'
+
+    def __init__(self, key: Key, value: Value) -> None:
+        self._key, self._value = key, value
+
+    __repr__ = generate_repr(__init__)
+
+    def __eq__(self, other: 'ComplexReversedItem') -> bool:
+        return (self.key == other.key and self.value == other.value
+                if isinstance(other, ComplexReversedItem)
+                else NotImplemented)
+
+    def __lt__(self, other: 'ComplexReversedItem') -> bool:
+        return (self.key > other.key
+                if isinstance(other, ComplexReversedItem)
+                else NotImplemented)
+
+    @property
+    def key(self) -> Key:
+        return self._key
+
+    @property
+    def value(self) -> Value:
+        return self._value
 
 
 class SimpleItem(Item):
@@ -88,12 +87,12 @@ class SimpleItem(Item):
     __repr__ = generate_repr(__init__)
 
     def __eq__(self, other: 'SimpleItem') -> bool:
-        return (self._value == other._value
+        return (self.value == other.value
                 if isinstance(other, SimpleItem)
                 else NotImplemented)
 
     def __lt__(self, other: 'SimpleItem') -> bool:
-        return (self._value < other._value
+        return (self.value < other.value
                 if isinstance(other, SimpleItem)
                 else NotImplemented)
 
@@ -111,12 +110,12 @@ class SimpleReversedItem(Item):
     __repr__ = generate_repr(__init__)
 
     def __eq__(self, other: 'SimpleReversedItem') -> bool:
-        return (self._value == other._value
+        return (self.value == other.value
                 if isinstance(other, SimpleReversedItem)
                 else NotImplemented)
 
     def __lt__(self, other: 'SimpleReversedItem') -> bool:
-        return (self._value > other._value
+        return (self.value > other.value
                 if isinstance(other, SimpleReversedItem)
                 else NotImplemented)
 
