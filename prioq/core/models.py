@@ -32,14 +32,14 @@ class ComplexItem(Item):
 
     __repr__ = generate_repr(__init__)
 
-    def __eq__(self, other: 'ComplexReversedItem') -> bool:
+    def __eq__(self, other: 'ComplexItem') -> bool:
         return (self.key == other.key and self.value == other.value
-                if isinstance(other, ComplexReversedItem)
+                if isinstance(other, ComplexItem)
                 else NotImplemented)
 
-    def __lt__(self, other: 'ComplexReversedItem') -> bool:
+    def __lt__(self, other: 'ComplexItem') -> bool:
         return (self.key < other.key
-                if isinstance(other, ComplexReversedItem)
+                if isinstance(other, ComplexItem)
                 else NotImplemented)
 
     @property
