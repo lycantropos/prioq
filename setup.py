@@ -33,5 +33,5 @@ setup(name=prioq.__name__,
       license='MIT License',
       url=project_base_url,
       download_url=project_base_url + 'archive/master.zip',
-      python_requires='>=3.6',
+      python_requires='>=3.6.4',
       install_requires=read_file('requirements.txt'))
