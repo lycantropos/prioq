@@ -20,7 +20,7 @@ python -m pip install --upgrade pip setuptools
 
 ### User
 
-Download and install the latest stable version from `PyPI` repository:
+Download and install the latest stable version from `PyPI` repository
 ```bash
 python -m pip install --upgrade prioq
 ```
@@ -35,7 +35,7 @@ cd prioq
 
 Install dependencies
 ```bash
-python -m pip install --force-reinstall -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 Install
