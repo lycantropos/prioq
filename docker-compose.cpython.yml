@@ -9,11 +9,11 @@ services:
         - IMAGE_VERSION=${CPYTHON_IMAGE_VERSION}
     image: lycantropos/prioq-cpython:0.3.0
     volumes:
-      - ./prioq/:/opt/prioq/prioq/
-      - ./tests/:/opt/prioq/tests/
-      - ./README.md:/opt/prioq/README.md
-      - ./requirements.txt:/opt/prioq/requirements.txt
-      - ./requirements-tests.txt:/opt/prioq/requirements-tests.txt
-      - ./setup.py:/opt/prioq/setup.py
+      - ./prioq:/opt/prioq/prioq
       - ./pytest.ini:/opt/prioq/pytest.ini
+      - ./README.md:/opt/prioq/README.md
+      - ./requirements-tests.txt:/opt/prioq/requirements-tests.txt
+      - ./requirements.txt:/opt/prioq/requirements.txt
+      - ./setup.py:/opt/prioq/setup.py
+      - ./tests:/opt/prioq/tests
     entrypoint: pytest
