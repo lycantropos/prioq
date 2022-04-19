@@ -5,11 +5,11 @@ from operator import not_
 from hypothesis import strategies
 
 from prioq.base import PriorityQueue
-from prioq.utils import identity
 from tests.utils import (PriorityQueuesPair,
                          PriorityQueuesTriplet,
                          ValuesListsPairWithKey,
-                         ValuesListsTripletWithKey)
+                         ValuesListsTripletWithKey,
+                         identity)
 from .factories import (to_priority_queue,
                         to_priority_queue_with_value,
                         to_priority_queues_with_their_values,
