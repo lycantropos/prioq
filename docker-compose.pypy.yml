@@ -7,7 +7,7 @@ services:
       args:
         - IMAGE_NAME=${PYPY_IMAGE_NAME}
         - IMAGE_VERSION=${PYPY_IMAGE_VERSION}
-    image: lycantropos/prioq-pypy:0.4.0-alpha
+    image: lycantropos/prioq-pypy:0.4.0
     volumes:
       - ./prioq:/opt/prioq/prioq
       - ./pytest.ini:/opt/prioq/pytest.ini
