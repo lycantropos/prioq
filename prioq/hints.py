@@ -1,6 +1,7 @@
-from typing import (Callable,
-                    TypeVar)
+from typing import Callable as _Callable
 
-Value = TypeVar('Value')
-Key = TypeVar('Key')
-SortingKey = Callable[[Value], Key]
+from .core import hints as _hints
+
+Key = _hints.Key
+Value = _hints.Value
+SortingKey = _Callable[[Value], Key]

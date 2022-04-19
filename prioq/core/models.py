@@ -3,8 +3,8 @@ from abc import (ABC,
 
 from reprit.base import generate_repr
 
-from prioq.hints import (Key,
-                         Value)
+from .hints import (Key,
+                    Value)
 
 
 class Item(ABC):
