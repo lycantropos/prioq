@@ -6,7 +6,8 @@ from typing import (Any as _Any,
                     Generic as _Generic,
                     List as _List,
                     Optional as _Optional,
-                    cast, overload as _overload)
+                    cast as _cast,
+                    overload as _overload)
 
 from reprit.base import generate_repr as _generate_repr
 
@@ -51,7 +52,7 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue.reverse
         True
         """
-        self._sorting_key: _SortingKey = cast(
+        self._sorting_key: _SortingKey = _cast(
                 _SortingKey,
                 (_ReversedOrder if reverse else _NaturalOrder)
                 if key is None
