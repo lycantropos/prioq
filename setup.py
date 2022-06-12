@@ -14,6 +14,7 @@ def read_file(path_string: str) -> str:
 
 setup(name=prioq.__name__,
       packages=find_packages(exclude=('tests', 'tests.*')),
+      package_data={prioq.__name__: ['py.typed']},
       version=prioq.__version__,
       description=prioq.__doc__,
       long_description=read_file('README.md'),
