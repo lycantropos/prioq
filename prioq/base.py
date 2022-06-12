@@ -1,19 +1,19 @@
-from functools import partial as _partial
+from functools import wraps as _wraps
 from heapq import (heapify as _heapify,
                    heappop as _heappop,
                    heappush as _heappush)
-from typing import (Generic as _Generic,
+from typing import (Any as _Any,
+                    Generic as _Generic,
                     List as _List,
-                    Optional as _Optional)
+                    Optional as _Optional,
+                    cast, overload as _overload)
 
 from reprit.base import generate_repr as _generate_repr
 
-from .core.models import (ComplexItem as _ComplexItem,
-                          ComplexReversedItem as _ComplexReversedItem,
-                          SimpleItem as _SimpleItem,
-                          SimpleReversedItem as _SimpleReversedItem)
-from .hints import (SortingKey as _SortingKey,
-                    Value as _Value)
+from .core.hints import Value as _Value
+from .core.order import (NaturalOrder as _NaturalOrder,
+                         ReversedOrder as _ReversedOrder)
+from .hints import SortingKey as _SortingKey
 
 
 class PriorityQueue(_Generic[_Value]):
@@ -23,7 +23,7 @@ class PriorityQueue(_Generic[_Value]):
 
     Reference: https://en.wikipedia.org/wiki/Priority_queue
     """
-    __slots__ = '_item_factory', '_items', '_key', '_reverse'
+    __slots__ = '_sorting_key', '_items', '_key', '_reverse'
 
     def __init__(self,
                  *values: _Value,
@@ -51,21 +51,29 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue.reverse
         True
         """
-        self._item_factory = ((_SimpleReversedItem
-                               if reverse
-                               else _SimpleItem)
-                              if key is None
-                              else (_partial(_to_complex_reversed_item, key)
-                                    if reverse
-                                    else _partial(_to_complex_item, key)))
-        self._items = [self._item_factory(value) for value in values]
+        self._sorting_key: _SortingKey = cast(
+                _SortingKey,
+                (_ReversedOrder if reverse else _NaturalOrder)
+                if key is None
+                else (_reverse_key(key) if reverse else key)
+        )
+        self._items = [(self._sorting_key(value), value) for value in values]
         _heapify(self._items)
         self._key = key
         self._reverse = reverse
 
     __repr__ = _generate_repr(__init__)
 
+    @_overload
     def __eq__(self, other: 'PriorityQueue[_Value]') -> bool:
+        ...
+
+    @_overload
+    def __eq__(self, other: _Any) -> _Any:
+        ...
+
+    def __eq__(self, other):
+
         """
         Checks if the queue is equal to the given one.
 
@@ -137,9 +145,11 @@ class PriorityQueue(_Generic[_Value]):
         -1
         """
         try:
-            return self._items[0].value
+            _, value = self._items[0]
         except IndexError:
             raise ValueError('Priority queue is empty') from None
+        else:
+            return value
 
     def pop(self) -> _Value:
         """
@@ -157,7 +167,8 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue
         PriorityQueue(2, 3, 4, key=None, reverse=False)
         """
-        return _heappop(self._items).value
+        _, value = _heappop(self._items)
+        return value
 
     def push(self, value: _Value) -> None:
         """
@@ -173,7 +184,7 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue
         PriorityQueue(-1, 0, 1, 2, 3, 4, 10, key=None, reverse=False)
         """
-        _heappush(self._items, self._item_factory(value))
+        _heappush(self._items, (self._sorting_key(value), value))
 
     def remove(self, value: _Value) -> None:
         """
@@ -190,7 +201,7 @@ class PriorityQueue(_Generic[_Value]):
         PriorityQueue(1, 2, 3, key=None, reverse=False)
         """
         try:
-            self._items.remove(self._item_factory(value))
+            self._items.remove((self._sorting_key(value), value))
         except ValueError:
             raise ValueError('{!r} is not in priority queue'
                              .format(value)) from None
@@ -207,13 +218,12 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue.values()
         [0, 1, 2, 3, 4]
         """
-        return [item.value for item in sorted(self._items)]
+        return [value for _, value in sorted(self._items)]
 
 
-def _to_complex_item(key: _SortingKey, value: _Value) -> _ComplexItem:
-    return _ComplexItem(key(value), value)
+def _reverse_key(key: _SortingKey) -> _SortingKey:
+    @_wraps(key)
+    def reversed_key(value: _Value) -> _ReversedOrder:
+        return _ReversedOrder(key(value))
 
-
-def _to_complex_reversed_item(key: _SortingKey, value: _Value
-                              ) -> _ComplexReversedItem:
-    return _ComplexReversedItem(key(value), value)
+    return reversed_key
