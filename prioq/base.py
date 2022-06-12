@@ -1,4 +1,4 @@
-from functools import wraps as _wraps
+from functools import partial as _partial
 from heapq import (heapify as _heapify,
                    heappop as _heappop,
                    heappush as _heappush)
@@ -55,7 +55,7 @@ class PriorityQueue(_Generic[_Value]):
                 _SortingKey,
                 (_ReversedOrder if reverse else _NaturalOrder)
                 if key is None
-                else (_reverse_key(key) if reverse else key)
+                else (_partial(_to_reversed_key, key) if reverse else key)
         )
         self._items = [(self._sorting_key(value), value) for value in values]
         _heapify(self._items)
@@ -221,9 +221,5 @@ class PriorityQueue(_Generic[_Value]):
         return [value for _, value in sorted(self._items)]
 
 
-def _reverse_key(key: _SortingKey) -> _SortingKey:
-    @_wraps(key)
-    def reversed_key(value: _Value) -> _ReversedOrder:
-        return _ReversedOrder(key(value))
-
-    return reversed_key
+def _to_reversed_key(key: _SortingKey, value: _Value) -> _ReversedOrder:
+    return _ReversedOrder(key(value))
