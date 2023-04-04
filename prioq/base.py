@@ -40,7 +40,7 @@ class PriorityQueue(_Generic[_Value]):
         :param reverse:
             flag, if set to `True` specifies
             that values should be processed in descending order
-            (from highest priority to lowest).
+            (from the highest priority to lowest).
 
         >>> from prioq.base import PriorityQueue
         >>> values = range(-5, 5)
