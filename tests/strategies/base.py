@@ -1,6 +1,7 @@
 import math
 from functools import partial
 from operator import not_
+from typing import Any
 
 from hypothesis import strategies as _st
 
@@ -26,7 +27,7 @@ strings_keys = _st.sampled_from([identity, str.lower, str.upper,
                                  str.title, str.capitalize,
                                  str.casefold, str.swapcase])
 
-sortables_with_keys = {
+ordered_values_with_keys = {
     _st.integers(): finite_numbers_keys,
     _st.floats(allow_nan=False): maybe_infinite_numbers_keys,
     _st.floats(allow_nan=False,
@@ -34,19 +35,25 @@ sortables_with_keys = {
     _st.booleans(): _st.just(not_) | finite_numbers_keys,
     _st.text(): strings_keys
 }
-values_keys = {**sortables_with_keys,
-               _st.from_type(object): _st.sampled_from([id, lambda _: 0])}
+unordered_values = _st.sampled_from([None, Ellipsis, NotImplemented])
 
+
+def to_zero(_: Any) -> int:
+    return 0
+
+
+values_keys = {**ordered_values_with_keys,
+               unordered_values: _st.sampled_from([id, to_zero])}
 base_values_with_keys_strategies = _st.sampled_from(list(values_keys.items()))
 values_with_keys_strategies = (
         _st.sampled_from([(sortables, _st.none())
-                          for sortables in sortables_with_keys.keys()])
+                          for sortables in ordered_values_with_keys.keys()])
         | _st.recursive(base_values_with_keys_strategies,
                         to_values_tuples_with_keys,
                         max_leaves=10)
 )
 values_with_keys = (
-        (_st.sampled_from(list(sortables_with_keys.keys()))
+        (_st.sampled_from(list(ordered_values_with_keys.keys()))
          .flatmap(lambda values: _st.tuples(values, _st.none())))
         | values_with_keys_strategies.flatmap(to_values_with_keys)
 )
