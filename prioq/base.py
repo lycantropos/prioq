@@ -91,9 +91,7 @@ class PriorityQueue(_t.Generic[_Key, _Value]):
         >>> queue == PriorityQueue(*range(5))
         False
         """
-        return (self is other
-                or len(self) == len(other)
-                and self.values() == other.values()
+        return (self is other or self._items == other._items
                 if isinstance(other, PriorityQueue)
                 else NotImplemented)
 
