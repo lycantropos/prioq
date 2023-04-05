@@ -15,8 +15,9 @@ from tests.utils import Strategy
 
 
 def to_values_tuples_with_keys(
-        values_with_keys: Strategy[Tuple[Strategy[Value],
-                                         Strategy[SortingKey]]]
+        values_with_keys: Strategy[
+            Tuple[Strategy[Value], Strategy[SortingKey]]
+        ]
 ) -> Strategy[Tuple[Strategy[Tuple[Value, ...]], Strategy[SortingKey]]]:
     def to_values_tuples_with_key(
             values_with_keys_list: List[Strategy[Tuple[Value, SortingKey]]]
@@ -37,11 +38,11 @@ def combined(keys: Sequence[SortingKey], values: Sequence[Value]) -> Key:
     return tuple(key(arg) for key, arg in zip(keys, values))
 
 
-def to_values_with_keys(values_with_keys: Tuple[Strategy[Value],
-                                                Strategy[SortingKey]]
-                        ) -> Strategy[Tuple[Value, Optional[SortingKey]]]:
+def to_values_with_keys(
+        values_with_keys: Tuple[Strategy[Value], Strategy[SortingKey]]
+) -> Strategy[Tuple[Value, Optional[SortingKey]]]:
     values, keys = values_with_keys
-    return strategies.tuples(values, strategies.none() | keys)
+    return strategies.tuples(values, keys)
 
 
 def to_values_lists_with_keys(
@@ -54,22 +55,23 @@ def to_values_lists_with_keys(
                                          min_size=min_size,
                                          max_size=max_size)
                         for min_size, max_size in sizes]
-    return strategies.tuples(*lists_strategies, strategies.none() | keys)
+    return strategies.tuples(*lists_strategies, keys)
 
 
-def to_priority_queue(values_with_key: Tuple[List[Value],
-                                             Optional[SortingKey]],
-                      reverse: bool) -> PriorityQueue:
+def to_priority_queue(
+        values_with_key: Tuple[List[Value], Optional[SortingKey]],
+        reverse: bool
+) -> PriorityQueue:
     values, key = values_with_key
     return PriorityQueue(*values,
                          key=key,
                          reverse=reverse)
 
 
-def to_priority_queue_with_value(values_with_key: Tuple[List[Value],
-                                                        Optional[SortingKey]],
-                                 reverse: bool
-                                 ) -> Tuple[PriorityQueue, Value]:
+def to_priority_queue_with_value(
+        values_with_key: Tuple[List[Value], Optional[SortingKey]],
+        reverse: bool
+) -> Tuple[PriorityQueue, Value]:
     values, key = values_with_key
     value, *rest_values = values
     return (PriorityQueue(*rest_values,
@@ -78,8 +80,8 @@ def to_priority_queue_with_value(values_with_key: Tuple[List[Value],
             value)
 
 
-def to_priority_queues_with_their_values(queue: PriorityQueue
-                                         ) -> Strategy[Tuple[PriorityQueue,
-                                                             Value]]:
+def to_priority_queues_with_their_values(
+        queue: PriorityQueue
+) -> Strategy[Tuple[PriorityQueue, Value]]:
     return strategies.tuples(strategies.just(queue),
                              strategies.sampled_from(queue.values()))
