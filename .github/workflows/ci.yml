@@ -56,6 +56,11 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
+      - name: 'Setup Python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python_version }}
+          architecture: ${{ matrix.platform.python_architecture }}
       - name: 'Install in editable mode'
         run: python -m pip -v install -e .[tests]
       - name: 'Install Mypy'
@@ -64,11 +69,6 @@ jobs:
       - name: 'Run Mypy'
         run: python -m mypy ${{ github.event.repository.name }}
         if: ${{ matrix.python_version != 'pypy-3.7' }}
-      - name: 'Setup Python'
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python_version }}
-          architecture: ${{ matrix.platform.python_architecture }}
       - name: 'Install coverage dependencies'
         run: python -m pip install -U coverage[toml]
       - name: 'Run doctests'
