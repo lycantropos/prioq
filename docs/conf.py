@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 import os
 import sys
+from datetime import date
 
 sys.path.insert(0, os.path.abspath('..'))
 
@@ -18,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 import prioq
 
 project = prioq.__name__
-copyright = '2019, Azat Ibrakov'
+copyright = f'{date.today().year}, Azat Ibrakov'
 author = 'Azat Ibrakov'
 
 # The full version, including alpha/beta/rc tags
