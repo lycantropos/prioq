@@ -1,34 +1,35 @@
+import typing as _t
 from functools import partial as _partial
 from heapq import (heapify as _heapify,
                    heappop as _heappop,
                    heappush as _heappush)
-from typing import (Any as _Any,
-                    Generic as _Generic,
-                    List as _List,
-                    Optional as _Optional,
-                    cast as _cast,
-                    overload as _overload)
 
+import typing_extensions as _te
 from reprit.base import generate_repr as _generate_repr
 
-from .core.hints import Value as _Value
+from .core.hints import (Key as _Key,
+                         Value as _Value)
+from .core.item import Item as _Item
 from .core.order import (NaturalOrder as _NaturalOrder,
                          ReversedOrder as _ReversedOrder)
 from .hints import SortingKey as _SortingKey
 
 
-class PriorityQueue(_Generic[_Value]):
+class PriorityQueue(_t.Generic[_Key, _Value]):
     """
     A priority queue is a mutable container
     that provides constant time lookup of the smallest (by default) element.
 
     Reference: https://en.wikipedia.org/wiki/Priority_queue
     """
+    _items: _t.List[_Item[_Key, _Value]]
+    _sorting_key: _SortingKey[_Value, _Key]
+
     __slots__ = '_sorting_key', '_items', '_key', '_reverse'
 
     def __init__(self,
                  *values: _Value,
-                 key: _Optional[_SortingKey] = None,
+                 key: _t.Optional[_SortingKey[_Value, _Key]] = None,
                  reverse: bool = False) -> None:
         """
         Initializes queue.
@@ -52,29 +53,29 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue.reverse
         True
         """
-        self._sorting_key: _SortingKey = _cast(
-                _SortingKey,
+        self._sorting_key = _t.cast(
+                _SortingKey[_Value, _Key],
                 (_ReversedOrder if reverse else _NaturalOrder)
                 if key is None
                 else (_partial(_to_reversed_key, key) if reverse else key)
         )
-        self._items = [(self._sorting_key(value), value) for value in values]
+        self._items = [_Item(self._sorting_key(value), value)
+                       for value in values]
         _heapify(self._items)
         self._key = key
         self._reverse = reverse
 
     __repr__ = _generate_repr(__init__)
 
-    @_overload
-    def __eq__(self, other: 'PriorityQueue[_Value]') -> bool:
+    @_t.overload
+    def __eq__(self, other: _te.Self) -> bool:
         ...
 
-    @_overload
-    def __eq__(self, other: _Any) -> _Any:
+    @_t.overload
+    def __eq__(self, other: _t.Any) -> _t.Any:
         ...
 
-    def __eq__(self, other):
-
+    def __eq__(self, other: _t.Any) -> _t.Any:
         """
         Checks if the queue is equal to the given one.
 
@@ -109,7 +110,7 @@ class PriorityQueue(_Generic[_Value]):
         return len(self._items)
 
     @property
-    def key(self) -> _Optional[_SortingKey]:
+    def key(self) -> _t.Optional[_SortingKey[_Value, _Key]]:
         return self._key
 
     @property
@@ -146,11 +147,11 @@ class PriorityQueue(_Generic[_Value]):
         -1
         """
         try:
-            _, value = self._items[0]
+            item = self._items[0]
         except IndexError:
             raise ValueError('Priority queue is empty') from None
         else:
-            return value
+            return item.value
 
     def pop(self) -> _Value:
         """
@@ -168,8 +169,7 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue
         PriorityQueue(2, 3, 4, key=None, reverse=False)
         """
-        _, value = _heappop(self._items)
-        return value
+        return _heappop(self._items).value
 
     def push(self, value: _Value) -> None:
         """
@@ -185,7 +185,7 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue
         PriorityQueue(-1, 0, 1, 2, 3, 4, 10, key=None, reverse=False)
         """
-        _heappush(self._items, (self._sorting_key(value), value))
+        _heappush(self._items, _Item(self._sorting_key(value), value))
 
     def remove(self, value: _Value) -> None:
         """
@@ -202,14 +202,14 @@ class PriorityQueue(_Generic[_Value]):
         PriorityQueue(1, 2, 3, key=None, reverse=False)
         """
         try:
-            self._items.remove((self._sorting_key(value), value))
+            self._items.remove(_Item(self._sorting_key(value), value))
         except ValueError:
             raise ValueError('{!r} is not in priority queue'
                              .format(value)) from None
         else:
             _heapify(self._items)
 
-    def values(self) -> _List[_Value]:
+    def values(self) -> _t.List[_Value]:
         """
         Returns elements of the queue.
 
@@ -219,8 +219,9 @@ class PriorityQueue(_Generic[_Value]):
         >>> queue.values()
         [0, 1, 2, 3, 4]
         """
-        return [value for _, value in sorted(self._items)]
+        return [item.value for item in sorted(self._items)]
 
 
-def _to_reversed_key(key: _SortingKey, value: _Value) -> _ReversedOrder:
+def _to_reversed_key(key: _SortingKey[_Value, _Key],
+                     value: _Value) -> _ReversedOrder[_Key]:
     return _ReversedOrder(key(value))

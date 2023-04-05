@@ -1,16 +1,15 @@
-from typing import (Any,
-                    Generic,
-                    TypeVar)
+import typing as _t
 
+import typing_extensions as _te
 from reprit.base import generate_repr
 
 from .hints import Ordered
 
-_T = TypeVar('_T',
-             bound=Ordered)
+_T = _t.TypeVar('_T',
+                bound=Ordered)
 
 
-class NaturalOrder(Generic[_T]):
+class NaturalOrder(_t.Generic[_T]):
     __slots__ = '_value',
 
     def __init__(self, _value: _T) -> None:
@@ -18,18 +17,34 @@ class NaturalOrder(Generic[_T]):
 
     __repr__ = generate_repr(__init__)
 
-    def __eq__(self, other: Any) -> Any:
+    @_t.overload
+    def __eq__(self, other: _te.Self) -> bool:
+        ...
+
+    @_t.overload
+    def __eq__(self, other: _t.Any) -> _t.Any:
+        ...
+
+    def __eq__(self, other: _t.Any) -> _t.Any:
         return (self._value == other._value
                 if isinstance(other, NaturalOrder)
                 else NotImplemented)
 
-    def __lt__(self, other: Any) -> Any:
+    @_t.overload
+    def __lt__(self, other: _te.Self) -> bool:
+        ...
+
+    @_t.overload
+    def __lt__(self, other: _t.Any) -> _t.Any:
+        ...
+
+    def __lt__(self, other: _t.Any) -> _t.Any:
         return (self._value < other._value
                 if isinstance(other, NaturalOrder)
                 else NotImplemented)
 
 
-class ReversedOrder(Generic[_T]):
+class ReversedOrder(_t.Generic[_T]):
     __slots__ = '_value',
 
     def __init__(self, _value: _T) -> None:
@@ -37,12 +52,28 @@ class ReversedOrder(Generic[_T]):
 
     __repr__ = generate_repr(__init__)
 
-    def __eq__(self, other: Any) -> Any:
+    @_t.overload
+    def __eq__(self, other: _te.Self) -> bool:
+        ...
+
+    @_t.overload
+    def __eq__(self, other: _t.Any) -> _t.Any:
+        ...
+
+    def __eq__(self, other: _t.Any) -> _t.Any:
         return (self._value == other._value
                 if isinstance(other, ReversedOrder)
                 else NotImplemented)
 
-    def __lt__(self, other: Any) -> Any:
+    @_t.overload
+    def __lt__(self, other: _te.Self) -> bool:
+        ...
+
+    @_t.overload
+    def __lt__(self, other: _t.Any) -> _t.Any:
+        ...
+
+    def __lt__(self, other: _t.Any) -> _t.Any:
         return (other._value < self._value
                 if isinstance(other, ReversedOrder)
                 else NotImplemented)

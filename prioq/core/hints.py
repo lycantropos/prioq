@@ -1,15 +1,13 @@
-from typing import TypeVar
+import typing as _t
 
-from typing_extensions import Protocol
-
-_T = TypeVar('_T',
-             contravariant=True)
+import typing_extensions as _te
 
 
-class Ordered(Protocol[_T]):
-    def __lt__(self: _T, other: _T) -> bool:
+class Ordered(_te.Protocol):
+    def __lt__(self, other: _te.Self) -> bool:
         ...
 
 
-Value = TypeVar('Value')
-Key = TypeVar('Key', bound=Ordered)
+Value = _t.TypeVar('Value')
+Key = _t.TypeVar('Key',
+                 bound=Ordered)

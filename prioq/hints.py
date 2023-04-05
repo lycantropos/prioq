@@ -1,6 +1,9 @@
-from typing import Callable as _Callable
+import typing as _t
 
-from .core.hints import (Key,
-                         Value)
+import typing_extensions as _te
 
-SortingKey = _Callable[[Value], Key]
+from .core import hints as _hints
+
+Key: _te.TypeAlias = _hints.Key
+SortingKey = _t.Callable[[_hints.Value], _hints.Key]
+Value: _te.TypeAlias = _hints.Value
