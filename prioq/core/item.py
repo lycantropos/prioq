@@ -19,6 +19,19 @@ class Item(_t.Generic[Key, Value]):
         self.key, self.value = key, value
 
     @_t.overload
+    def __eq__(self, other: _te.Self) -> bool:
+        ...
+
+    @_t.overload
+    def __eq__(self, other: _t.Any) -> _t.Any:
+        ...
+
+    def __eq__(self, other: _t.Any) -> _t.Any:
+        return (self.key == other.key and self.value == other.value
+                if isinstance(other, Item)
+                else NotImplemented)
+
+    @_t.overload
     def __lt__(self, other: _te.Self) -> bool:
         ...
 
