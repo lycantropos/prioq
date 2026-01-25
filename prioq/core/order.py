@@ -1,79 +1,58 @@
-import typing as _t
+from typing import Any, Generic, TypeVar, overload
 
-import typing_extensions as _te
 from reprit.base import generate_repr
+from typing_extensions import Self
 
-from .hints import Ordered
+from .hints import HasCustomRepr, Ordered
 
-_T = _t.TypeVar('_T',
-                bound=Ordered)
+_T = TypeVar('_T', bound=Ordered)
 
 
-class NaturalOrder(_t.Generic[_T]):
-    __slots__ = '_value',
+class NaturalOrder(HasCustomRepr, Generic[_T]):
+    __slots__ = ('_value',)
 
-    def __init__(self, _value: _T) -> None:
+    def __init__(self, _value: _T, /) -> None:
         self._value = _value
 
     __repr__ = generate_repr(__init__)
 
-    @_t.overload
-    def __eq__(self, other: _te.Self) -> bool:
-        ...
+    @overload
+    def __eq__(self, other: Self, /) -> bool: ...
 
-    @_t.overload
-    def __eq__(self, other: _t.Any) -> _t.Any:
-        ...
+    @overload
+    def __eq__(self, other: Any, /) -> Any: ...
 
-    def __eq__(self, other: _t.Any) -> _t.Any:
-        return (self._value == other._value
-                if isinstance(other, NaturalOrder)
-                else NotImplemented)
+    def __eq__(self, other: Any, /) -> Any:
+        return (
+            self._value == other._value
+            if isinstance(other, NaturalOrder)
+            else NotImplemented
+        )
 
-    @_t.overload
-    def __lt__(self, other: _te.Self) -> bool:
-        ...
-
-    @_t.overload
-    def __lt__(self, other: _t.Any) -> _t.Any:
-        ...
-
-    def __lt__(self, other: _t.Any) -> _t.Any:
-        return (self._value < other._value
-                if isinstance(other, NaturalOrder)
-                else NotImplemented)
+    def __lt__(self, other: Self, /) -> bool:
+        return self._value < other._value
 
 
-class ReversedOrder(_t.Generic[_T]):
-    __slots__ = '_value',
+class ReversedOrder(HasCustomRepr, Generic[_T]):
+    __slots__ = ('_value',)
 
-    def __init__(self, _value: _T) -> None:
+    def __init__(self, _value: _T, /) -> None:
         self._value = _value
 
     __repr__ = generate_repr(__init__)
 
-    @_t.overload
-    def __eq__(self, other: _te.Self) -> bool:
-        ...
+    @overload
+    def __eq__(self, other: Self, /) -> bool: ...
 
-    @_t.overload
-    def __eq__(self, other: _t.Any) -> _t.Any:
-        ...
+    @overload
+    def __eq__(self, other: Any, /) -> Any: ...
 
-    def __eq__(self, other: _t.Any) -> _t.Any:
-        return (self._value == other._value
-                if isinstance(other, ReversedOrder)
-                else NotImplemented)
+    def __eq__(self, other: Any, /) -> Any:
+        return (
+            self._value == other._value
+            if isinstance(other, ReversedOrder)
+            else NotImplemented
+        )
 
-    @_t.overload
-    def __lt__(self, other: _te.Self) -> bool:
-        ...
-
-    @_t.overload
-    def __lt__(self, other: _t.Any) -> _t.Any:
-        ...
-
-    def __lt__(self, other: _t.Any) -> _t.Any:
-        return (other._value < self._value
-                if isinstance(other, ReversedOrder)
-                else NotImplemented)
+    def __lt__(self, other: Self, /) -> bool:
+        return other._value < self._value

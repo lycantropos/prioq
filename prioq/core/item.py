@@ -1,47 +1,44 @@
 from __future__ import annotations
 
-import typing as _t
+from typing import Any, Generic, overload
 
-import typing_extensions as _te
 from reprit.base import generate_repr as _generate_repr
+from typing_extensions import Self
 
-from .hints import (Key,
-                    Value)
+from .hints import HasCustomRepr, KeyT, ValueT
 
 
-class Item(_t.Generic[Key, Value]):
-    key: Key
-    value: Value
+class Item(HasCustomRepr, Generic[KeyT, ValueT]):
+    key: KeyT
+    value: ValueT
 
     __slots__ = 'key', 'value'
 
-    def __init__(self, key: Key, value: Value) -> None:
+    def __init__(self, key: KeyT, value: ValueT, /) -> None:
         self.key, self.value = key, value
 
-    @_t.overload
-    def __eq__(self, other: _te.Self) -> bool:
-        ...
+    @overload
+    def __eq__(self, other: Self, /) -> bool: ...
 
-    @_t.overload
-    def __eq__(self, other: _t.Any) -> _t.Any:
-        ...
+    @overload
+    def __eq__(self, other: Any, /) -> Any: ...
 
-    def __eq__(self, other: _t.Any) -> _t.Any:
-        return (self.key == other.key and self.value == other.value
-                if isinstance(other, Item)
-                else NotImplemented)
+    def __eq__(self, other: Any, /) -> Any:
+        return (
+            self.key == other.key and self.value == other.value
+            if isinstance(other, Item)
+            else NotImplemented
+        )
 
-    @_t.overload
-    def __lt__(self, other: _te.Self) -> bool:
-        ...
+    @overload
+    def __lt__(self, other: Self, /) -> bool: ...
 
-    @_t.overload
-    def __lt__(self, other: _t.Any) -> _t.Any:
-        ...
+    @overload
+    def __lt__(self, other: Any, /) -> Any: ...
 
-    def __lt__(self, other: _t.Any) -> _t.Any:
-        return (self.key < other.key
-                if isinstance(other, Item)
-                else NotImplemented)
+    def __lt__(self, other: Any, /) -> Any:
+        return (
+            self.key < other.key if isinstance(other, Item) else NotImplemented
+        )
 
     __repr__ = _generate_repr(__init__)

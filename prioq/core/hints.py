@@ -1,13 +1,16 @@
-import typing as _t
+from typing import TypeVar
 
-import typing_extensions as _te
-
-
-class Ordered(_te.Protocol):
-    def __lt__(self, other: _te.Self) -> bool:
-        ...
+from typing_extensions import Protocol, Self
 
 
-Value = _t.TypeVar('Value')
-Key = _t.TypeVar('Key',
-                 bound=Ordered)
+class Ordered(Protocol):
+    def __lt__(self, other: Self, /) -> bool: ...
+
+
+class HasCustomRepr(Protocol):
+    def __repr__(self, /) -> str:
+        raise NotImplementedError
+
+
+ValueT = TypeVar('ValueT')
+KeyT = TypeVar('KeyT', bound=Ordered)
