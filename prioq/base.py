@@ -9,7 +9,7 @@ from heapq import (
 from typing import (
     Any as _Any,
     Generic as _Generic,
-    cast,
+    cast as _cast,
     overload as _overload,
 )
 
@@ -71,7 +71,7 @@ class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
         >>> queue.reverse
         True
         """
-        self._sorting_key = cast(
+        self._sorting_key = _cast(
             _SortingKey[_ValueT, _KeyT],
             (
                 (_ReversedOrder if reverse else _NaturalOrder)
