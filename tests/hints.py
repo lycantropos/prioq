@@ -1,13 +1,13 @@
+from collections.abc import Callable
 from typing import TypeAlias, TypeVar
 
 from prioq.base import PriorityQueue
-from prioq.core.hints import Ordered
-from prioq.hints import SortingKey
+from prioq.hints import Ordered
 
 KeyT = TypeVar('KeyT', bound=Ordered)
 ValueT = TypeVar('ValueT')
 ValuesListWithKey: TypeAlias = tuple[
-    list[ValueT], SortingKey[ValueT, KeyT] | None
+    list[ValueT], Callable[[ValueT], KeyT] | None
 ]
 PriorityQueuesPair: TypeAlias = tuple[
     PriorityQueue[KeyT, ValueT], PriorityQueue[KeyT, ValueT]

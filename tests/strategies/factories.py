@@ -4,7 +4,6 @@ from functools import partial
 from hypothesis import strategies as st
 
 from prioq.base import PriorityQueue
-from prioq.hints import SortingKey
 from tests.hints import KeyT, ValueT
 
 
@@ -12,30 +11,30 @@ def to_values_tuples_with_keys(
     values_with_keys: st.SearchStrategy[
         tuple[
             st.SearchStrategy[ValueT],
-            st.SearchStrategy[SortingKey[ValueT, KeyT]],
+            st.SearchStrategy[Callable[[ValueT], KeyT]],
         ]
     ],
     /,
 ) -> st.SearchStrategy[
     tuple[
         st.SearchStrategy[tuple[ValueT, ...]],
-        st.SearchStrategy[SortingKey[Sequence[ValueT], tuple[KeyT, ...]]],
+        st.SearchStrategy[Callable[[Sequence[ValueT]], tuple[KeyT, ...]]],
     ]
 ]:
     def to_value_tuple_with_key_strategies(
         value_with_key_strategies: list[
             tuple[
                 st.SearchStrategy[ValueT],
-                st.SearchStrategy[SortingKey[ValueT, KeyT]],
+                st.SearchStrategy[Callable[[ValueT], KeyT]],
             ]
         ],
         /,
     ) -> tuple[
         st.SearchStrategy[tuple[ValueT, ...]],
-        st.SearchStrategy[SortingKey[Sequence[ValueT], tuple[KeyT, ...]]],
+        st.SearchStrategy[Callable[[Sequence[ValueT]], tuple[KeyT, ...]]],
     ]:
         def combine_keys(
-            keys: tuple[SortingKey[ValueT, KeyT], ...], /
+            keys: tuple[Callable[[ValueT], KeyT], ...], /
         ) -> Callable[[Sequence[ValueT]], tuple[KeyT, ...]]:
             return partial(to_combined_keys, keys)
 
@@ -60,7 +59,7 @@ def to_values_tuples_with_keys(
 
 
 def to_combined_keys(
-    keys: Sequence[SortingKey[ValueT, KeyT]], values: Sequence[ValueT], /
+    keys: Sequence[Callable[[ValueT], KeyT]], values: Sequence[ValueT], /
 ) -> tuple[KeyT, ...]:
     return tuple(key(arg) for key, arg in zip(keys, values, strict=True))
 
@@ -68,10 +67,10 @@ def to_combined_keys(
 def to_value_with_key_strategy(
     values_with_keys: tuple[
         st.SearchStrategy[ValueT],
-        st.SearchStrategy[SortingKey[ValueT, KeyT] | None],
+        st.SearchStrategy[Callable[[ValueT], KeyT] | None],
     ],
     /,
-) -> st.SearchStrategy[tuple[ValueT, SortingKey[ValueT, KeyT] | None]]:
+) -> st.SearchStrategy[tuple[ValueT, Callable[[ValueT], KeyT] | None]]:
     values, keys = values_with_keys
     return st.tuples(values, keys)
 
@@ -79,13 +78,13 @@ def to_value_with_key_strategy(
 def to_value_sequence_with_key_strategy(
     value_with_key_strategy: tuple[
         st.SearchStrategy[ValueT],
-        st.SearchStrategy[SortingKey[ValueT, KeyT] | None],
+        st.SearchStrategy[Callable[[ValueT], KeyT] | None],
     ],
     /,
     min_size: int = 0,
     max_size: int | None = None,
 ) -> st.SearchStrategy[
-    tuple[Sequence[ValueT], SortingKey[ValueT, KeyT] | None]
+    tuple[Sequence[ValueT], Callable[[ValueT], KeyT] | None]
 ]:
     value_strategy, key_strategy = value_with_key_strategy
     return st.tuples(
@@ -97,13 +96,13 @@ def to_value_sequence_with_key_strategy(
 def to_value_sequences_with_key_strategy(
     value_with_key_strategy: tuple[
         st.SearchStrategy[ValueT],
-        st.SearchStrategy[SortingKey[ValueT, KeyT] | None],
+        st.SearchStrategy[Callable[[ValueT], KeyT] | None],
     ],
     /,
     *,
     sizes: Sequence[tuple[int, int | None]],
 ) -> st.SearchStrategy[
-    tuple[Sequence[Sequence[ValueT]], SortingKey[ValueT, KeyT] | None]
+    tuple[Sequence[Sequence[ValueT]], Callable[[ValueT], KeyT] | None]
 ]:
     value_strategy, key_strategy = value_with_key_strategy
     return st.tuples(
@@ -118,7 +117,7 @@ def to_value_sequences_with_key_strategy(
 
 
 def to_priority_queue(
-    values_with_key: tuple[list[ValueT], SortingKey[ValueT, KeyT] | None],
+    values_with_key: tuple[list[ValueT], Callable[[ValueT], KeyT] | None],
     reverse: bool,
     /,
 ) -> PriorityQueue[KeyT, ValueT]:
@@ -127,7 +126,7 @@ def to_priority_queue(
 
 
 def to_priority_queue_with_value(
-    values_with_key: tuple[list[ValueT], SortingKey[ValueT, KeyT] | None],
+    values_with_key: tuple[list[ValueT], Callable[[ValueT], KeyT] | None],
     reverse: bool,
     /,
 ) -> tuple[PriorityQueue[KeyT, ValueT], ValueT]:

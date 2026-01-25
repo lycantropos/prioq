@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable as _Callable
 from functools import partial as _partial
 from heapq import (
     heapify as _heapify,
@@ -26,7 +27,6 @@ from .core.order import (
     NaturalOrder as _NaturalOrder,
     ReversedOrder as _ReversedOrder,
 )
-from .hints import SortingKey as _SortingKey
 
 
 class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
@@ -38,7 +38,7 @@ class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
     """
 
     _items: list[_Item[_KeyT, _ValueT]]
-    _sorting_key: _SortingKey[_ValueT, _KeyT]
+    _sorting_key: _Callable[[_ValueT], _KeyT]
 
     __slots__ = '_items', '_key', '_reverse', '_sorting_key'
 
@@ -46,7 +46,7 @@ class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
         self,
         /,
         *values: _ValueT,
-        key: _SortingKey[_ValueT, _KeyT] | None = None,
+        key: _Callable[[_ValueT], _KeyT] | None = None,
         reverse: bool = False,
     ) -> None:
         """
@@ -72,7 +72,7 @@ class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
         True
         """
         self._sorting_key = _cast(
-            _SortingKey[_ValueT, _KeyT],
+            _Callable[[_ValueT], _KeyT],
             (
                 (_ReversedOrder if reverse else _NaturalOrder)
                 if key is None
@@ -129,7 +129,7 @@ class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
         return len(self._items)
 
     @property
-    def key(self) -> _SortingKey[_ValueT, _KeyT] | None:
+    def key(self) -> _Callable[[_ValueT], _KeyT] | None:
         return self._key
 
     @property
@@ -241,6 +241,6 @@ class PriorityQueue(_HasCustomRepr, _Generic[_KeyT, _ValueT]):
 
 
 def _to_reversed_key(
-    key: _SortingKey[_ValueT, _KeyT], value: _ValueT, /
+    key: _Callable[[_ValueT], _KeyT], value: _ValueT, /
 ) -> _ReversedOrder[_KeyT]:
     return _ReversedOrder(key(value))

@@ -1,14 +1,15 @@
+from collections.abc import Callable
+
 from hypothesis import given
 
 from prioq.base import PriorityQueue
-from prioq.hints import SortingKey
 from tests import strategies
 from tests.hints import KeyT, ValueT
 
 
 @given(strategies.values_list_with_key_strategy, strategies.booleans)
 def test_basic(
-    values_with_key: tuple[list[ValueT], SortingKey[ValueT, KeyT] | None],
+    values_with_key: tuple[list[ValueT], Callable[[ValueT], KeyT] | None],
     reverse: bool,
 ) -> None:
     values, key = values_with_key

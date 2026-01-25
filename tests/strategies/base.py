@@ -1,4 +1,5 @@
 import math
+from collections.abc import Callable
 from functools import partial
 from operator import not_
 from typing import Any
@@ -6,7 +7,6 @@ from typing import Any
 from hypothesis import strategies as _st
 
 from prioq.base import PriorityQueue
-from prioq.hints import SortingKey
 from tests.hints import KeyT, PriorityQueuesPair, PriorityQueuesTriplet, ValueT
 from tests.utils import identity
 
@@ -111,7 +111,7 @@ non_empty_priority_queues_with_their_values = (
 
 def to_priority_queues_pair(
     values_lists_pair_with_key: tuple[
-        tuple[list[ValueT], list[ValueT]], SortingKey[ValueT, KeyT] | None
+        tuple[list[ValueT], list[ValueT]], Callable[[ValueT], KeyT] | None
     ],
     first_reverse: bool,
     second_reverse: bool,
@@ -139,7 +139,7 @@ priority_queues_pairs = _st.builds(
 def to_priority_queues_triplet(
     values_lists_triplet_with_key: tuple[
         tuple[list[ValueT], list[ValueT], list[ValueT]],
-        SortingKey[ValueT, KeyT] | None,
+        Callable[[ValueT], KeyT] | None,
     ],
     first_reverse: bool,
     second_reverse: bool,
