@@ -41,6 +41,6 @@ def test_connection_with_inequality(
     first_queue, second_queue = priority_queues_pair
 
     assert equivalence(
-        not first_queue == second_queue,  # noqa: SIM201
+        not first_queue == second_queue,  # ruff: ignore[negate-equal-op]
         first_queue != second_queue,
     )
